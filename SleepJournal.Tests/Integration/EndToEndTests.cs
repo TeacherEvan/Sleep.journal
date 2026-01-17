@@ -22,7 +22,7 @@ public class EndToEndTests : IAsyncLifetime
         _serviceLogger = new Mock<ILogger<SQLiteDataService>>();
         _viewModelLogger = new Mock<ILogger<MainPageViewModel>>();
 
-        _dataService = new SQLiteDataService(_serviceLogger.Object);
+        _dataService = new SQLiteDataService(_serviceLogger.Object, _testDbPath);
         _viewModel = new MainPageViewModel(_dataService, _viewModelLogger.Object);
 
         // Initialize database

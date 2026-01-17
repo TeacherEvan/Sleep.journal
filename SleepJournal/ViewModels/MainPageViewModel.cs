@@ -38,21 +38,18 @@ public partial class MainPageViewModel : ObservableObject
     /// Gets or sets the mood rating (1-10 scale).
     /// </summary>
     [ObservableProperty]
-    [Range(1, 10, ErrorMessage = "Mood must be between 1 and 10")]
     private int mood = 5;
 
     /// <summary>
     /// Gets or sets the social anxiety level (1-10 scale).
     /// </summary>
     [ObservableProperty]
-    [Range(1, 10, ErrorMessage = "Social Anxiety must be between 1 and 10")]
     private int socialAnxiety = 5;
 
     /// <summary>
     /// Gets or sets the regretability rating (1-10 scale).
     /// </summary>
     [ObservableProperty]
-    [Range(1, 10, ErrorMessage = "Regretability must be between 1 and 10")]
     private int regretability = 5;
 
     /// <summary>
@@ -82,7 +79,8 @@ public partial class MainPageViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task SaveAsync(CancellationToken cancellationToken)
     {
-        if (!ValidateInput())\n            return;
+        if (!ValidateInput())
+            return;
 
         IsSaving = true;
         ErrorMessage = "";
@@ -99,20 +97,20 @@ public partial class MainPageViewModel : ObservableObject
             };
 
             await _dataService.SaveEntryAsync(entry, cancellationToken);
-            _logger.LogInformation(\"Journal entry saved successfully\");
+            _logger.LogInformation("Journal entry saved successfully");
 
             // Reset fields
             ResetForm();
         }
         catch (OperationCanceledException)
         {
-            _logger.LogInformation(\"Save operation was cancelled\");
-            ErrorMessage = \"Save operation was cancelled.\";
+            _logger.LogInformation("Save operation was cancelled");
+            ErrorMessage = "Save operation was cancelled.";
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, \"Failed to save journal entry\");
-            ErrorMessage = \"Failed to save entry. Please try again.\";
+            _logger.LogError(ex, "Failed to save journal entry");
+            ErrorMessage = "Failed to save entry. Please try again.";
         }
         finally
         {
@@ -124,31 +122,31 @@ public partial class MainPageViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Text))
         {
-            ErrorMessage = \"Please enter some text for your journal entry.\";
+            ErrorMessage = "Please enter some text for your journal entry.";
             return false;
         }
 
         if (Text.Length > 200)
         {
-            ErrorMessage = \"Text must be 200 characters or less.\";
+            ErrorMessage = "Text must be 200 characters or less.";
             return false;
         }
 
         if (Mood < 1 || Mood > 10)
         {
-            ErrorMessage = \"Mood must be between 1 and 10.\";
+            ErrorMessage = "Mood must be between 1 and 10.";
             return false;
         }
 
         if (SocialAnxiety < 1 || SocialAnxiety > 10)
         {
-            ErrorMessage = \"Social Anxiety must be between 1 and 10.\";
+            ErrorMessage = "Social Anxiety must be between 1 and 10.";
             return false;
         }
 
         if (Regretability < 1 || Regretability > 10)
         {
-            ErrorMessage = \"Regretability must be between 1 and 10.\";
+            ErrorMessage = "Regretability must be between 1 and 10.";
             return false;
         }
 

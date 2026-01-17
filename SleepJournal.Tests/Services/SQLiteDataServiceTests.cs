@@ -58,12 +58,8 @@ public class SQLiteDataServiceTests : IAsyncLifetime
 
     private SQLiteDataService CreateTestService(string dbPath)
     {
-        // This is a workaround - in a real scenario, we'd refactor SQLiteDataService 
-        // to accept a database path parameter for testing
-        var originalAppDataDir = FileSystem.AppDataDirectory;
-
-        // Create a test service using reflection or by modifying the constructor
-        return new SQLiteDataService(_mockLogger.Object);
+        // Pass the test database path to the service
+        return new SQLiteDataService(_mockLogger.Object, dbPath);
     }
 
     #region Save Tests

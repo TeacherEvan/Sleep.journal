@@ -1,53 +1,278 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SleepJournal.MainPage">
+             x:Class="SleepJournal.MainPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}"
+             Shell.NavBarIsVisible="False">
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+        <VerticalStackLayout Spacing="0">
 
-            <Label
-                Text="Journal Entry"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1" />
+            <!-- Header Section with Gradient -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    Padding="24,48,24,32"
+                    Margin="0,0,0,0">
+                <Border.Shadow>
+                    <Shadow Brush="{StaticResource Gray900Brush}"
+                            Offset="0,4"
+                            Radius="12"
+                            Opacity="0.08"/>
+                </Border.Shadow>
 
-            <Editor
-                Text="{Binding Text}"
-                MaxLength="200"
-                Placeholder="Enter your thoughts..."
-                HeightRequest="100" />
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="🌙"
+                           FontSize="40"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Sleep Journal"
+                           FontSize="28"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{StaticResource White}"
+                           HorizontalTextAlignment="Center"
+                           SemanticProperties.HeadingLevel="Level1"/>
+                    <Label Text="Reflect on your day"
+                           FontSize="14"
+                           FontFamily="OpenSansRegular"
+                           TextColor="{StaticResource PrimaryLight}"
+                           HorizontalTextAlignment="Center"
+                           Opacity="0.9"/>
+                </VerticalStackLayout>
+            </Border>
 
-            <Label
-                Text="{Binding ErrorMessage}"
-                TextColor="Red" />
+            <!-- Main Content Card -->
+            <Border BackgroundColor="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource SurfaceDark}}"
+                    StrokeThickness="0"
+                    Margin="16,-20,16,16"
+                    Padding="20,24">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="{StaticResource Gray900Brush}"
+                            Offset="0,2"
+                            Radius="16"
+                            Opacity="0.06"/>
+                </Border.Shadow>
 
-            <Label Text="Mood (1-10)" />
-            <Slider
-                Minimum="1"
-                Maximum="10"
-                Value="{Binding Mood}" />
-            <Label Text="{Binding Mood}" />
+                <VerticalStackLayout Spacing="28">
 
-            <Label Text="Social Anxiety (1-10)" />
-            <Slider
-                Minimum="1"
-                Maximum="10"
-                Value="{Binding SocialAnxiety}" />
-            <Label Text="{Binding SocialAnxiety}" />
+                    <!-- Journal Entry Section -->
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="✍️ Your Thoughts"
+                               FontSize="16"
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>
 
-            <Label Text="Regretability (1-10)" />
-            <Slider
-                Minimum="1"
-                Maximum="10"
-                Value="{Binding Regretability}" />
-            <Label Text="{Binding Regretability}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray900}}"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                Padding="16,12">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
 
-            <Button
-                Text="Save"
-                Command="{Binding SaveCommand}"
-                HorizontalOptions="Fill" />
+                            <Grid RowDefinitions="Auto,*,Auto"
+                                    RowSpacing="8">
+                                <Editor Grid.Row="1"
+                                        Text="{Binding Text}"
+                                        MaxLength="200"
+                                        Placeholder="Share what's on your mind..."
+                                        PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"
+                                        FontFamily="OpenSansRegular"
+                                        FontSize="15"
+                                        HeightRequest="120"
+                                        AutoSize="TextChanges"
+                                        BackgroundColor="Transparent"/>
+
+                                <Label Grid.Row="2"
+                                       Text="{Binding Text.Length, StringFormat='{0}/200 characters'}"
+                                       FontSize="12"
+                                       FontFamily="OpenSansRegular"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                                       HorizontalOptions="End"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Error Message -->
+                        <Label Text="{Binding ErrorMessage}"
+                               IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                               TextColor="{StaticResource Error}"
+                               FontSize="13"
+                               FontFamily="OpenSansRegular"
+                               Margin="4,0,0,0"/>
+                    </VerticalStackLayout>
+
+                    <!-- Mood Section -->
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="😊"
+                                   FontSize="20"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Mood"
+                                   FontSize="16"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray900}}"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                Padding="16,12">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Slider Minimum="1"
+                                        Maximum="10"
+                                        Value="{Binding Mood}"
+                                        MinimumTrackColor="{StaticResource Primary}"
+                                        MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                        ThumbColor="{StaticResource Primary}"/>
+
+                                <Label Text="{Binding Mood, StringFormat='{0:F0}'}"
+                                       FontSize="32"
+                                       FontFamily="OpenSansSemibold"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalTextAlignment="Center"/>
+
+                                <Label Text="Rate your overall mood"
+                                       FontSize="12"
+                                       FontFamily="OpenSansRegular"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Social Anxiety Section -->
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="🤝"
+                                   FontSize="20"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Social Comfort"
+                                   FontSize="16"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray900}}"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                Padding="16,12">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Slider Minimum="1"
+                                        Maximum="10"
+                                        Value="{Binding SocialAnxiety}"
+                                        MinimumTrackColor="{StaticResource Secondary}"
+                                        MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                        ThumbColor="{StaticResource Secondary}"/>
+
+                                <Label Text="{Binding SocialAnxiety, StringFormat='{0:F0}'}"
+                                       FontSize="32"
+                                       FontFamily="OpenSansSemibold"
+                                       TextColor="{StaticResource Secondary}"
+                                       HorizontalTextAlignment="Center"/>
+
+                                <Label Text="How comfortable did you feel socially?"
+                                       FontSize="12"
+                                       FontFamily="OpenSansRegular"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Regretability Section -->
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="💭"
+                                   FontSize="20"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Reflection"
+                                   FontSize="16"
+                                   FontFamily="OpenSansSemibold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray900}}"
+                                StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                Padding="16,12">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Slider Minimum="1"
+                                        Maximum="10"
+                                        Value="{Binding Regretability}"
+                                        MinimumTrackColor="{StaticResource Accent}"
+                                        MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                                        ThumbColor="{StaticResource Accent}"/>
+
+                                <Label Text="{Binding Regretability, StringFormat='{0:F0}'}"
+                                       FontSize="32"
+                                       FontFamily="OpenSansSemibold"
+                                       TextColor="{StaticResource Accent}"
+                                       HorizontalTextAlignment="Center"/>
+
+                                <Label Text="How do you feel about today's choices?"
+                                       FontSize="12"
+                                       FontFamily="OpenSansRegular"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Save Button -->
+                    <Border BackgroundColor="{StaticResource Primary}"
+                            StrokeThickness="0"
+                            Padding="0"
+                            Margin="0,8,0,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="{StaticResource PrimaryBrush}"
+                                    Offset="0,4"
+                                    Radius="12"
+                                    Opacity="0.25"/>
+                        </Border.Shadow>
+
+                        <Button Text="Save Entry"
+                                Command="{Binding SaveCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource White}"
+                                FontFamily="OpenSansSemibold"
+                                FontSize="16"
+                                HeightRequest="56"
+                                CornerRadius="14"/>
+                    </Border>
+
+                    <!-- Loading Indicator -->
+                    <ActivityIndicator IsRunning="{Binding IsSaving}"
+                                       IsVisible="{Binding IsSaving}"
+                                       Color="{StaticResource Primary}"
+                                       HeightRequest="32"
+                                       WidthRequest="32"
+                                       HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Footer Spacing -->
+            <BoxView HeightRequest="24"
+                     Color="Transparent"/>
+
         </VerticalStackLayout>
     </ScrollView>
 

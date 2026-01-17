@@ -1,4 +1,7 @@
 using Microsoft.Extensions.Logging;
+using SleepJournal.Models;
+using SleepJournal.Services;
+using Moq;
 
 namespace SleepJournal.Tests.Helpers;
 
@@ -18,14 +21,14 @@ public static class TestHelpers
     /// <summary>
     /// Creates a test journal entry with default values
     /// </summary>
-    public static Models.JournalEntry CreateTestEntry(
+    public static JournalEntry CreateTestEntry(
         string text = "Test entry",
         int mood = 5,
         int socialAnxiety = 5,
         int regretability = 5,
         DateTime? createdAt = null)
     {
-        return new Models.JournalEntry
+        return new JournalEntry
         {
             Text = text,
             Mood = mood,
@@ -38,7 +41,7 @@ public static class TestHelpers
     /// <summary>
     /// Creates multiple test entries with sequential text
     /// </summary>
-    public static IEnumerable<Models.JournalEntry> CreateTestEntries(int count)
+    public static IEnumerable<JournalEntry> CreateTestEntries(int count)
     {
         for (int i = 1; i <= count; i++)
         {
@@ -92,8 +95,8 @@ public static class TestHelpers
     /// Asserts that two journal entries are equivalent (ignoring Id)
     /// </summary>
     public static void AssertEntriesEquivalent(
-        Models.JournalEntry expected,
-        Models.JournalEntry actual)
+        JournalEntry expected,
+        JournalEntry actual)
     {
         actual.Text.Should().Be(expected.Text);
         actual.Mood.Should().Be(expected.Mood);
@@ -169,9 +172,9 @@ public class JournalEntryBuilder
         return this;
     }
 
-    public Models.JournalEntry Build()
+    public JournalEntry Build()
     {
-        return new Models.JournalEntry
+        return new JournalEntry
         {
             Text = _text,
             Mood = _mood,
@@ -190,7 +193,7 @@ public static class SleepJournalAssertions
     /// <summary>
     /// Asserts that an entry has valid field values
     /// </summary>
-    public static void ShouldBeValidEntry(this Models.JournalEntry entry)
+    public static void ShouldBeValidEntry(this JournalEntry entry)
     {
         entry.Should().NotBeNull();
         entry.Text.Should().NotBeNullOrWhiteSpace();
@@ -205,7 +208,7 @@ public static class SleepJournalAssertions
     /// Asserts that a collection of entries is in descending chronological order
     /// </summary>
     public static void ShouldBeInDescendingChronologicalOrder(
-        this IEnumerable<Models.JournalEntry> entries)
+        this IEnumerable<JournalEntry> entries)
     {
         var entryList = entries.ToList();
         for (int i = 0; i < entryList.Count - 1; i++)
