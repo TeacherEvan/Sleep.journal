@@ -20,6 +20,7 @@ public static class MauiProgram
 
 		// Services
 		builder.Services.AddSingleton<IDataService, SQLiteDataService>();
+		builder.Services.AddSingleton<IBiometricService, BiometricService>();
 
 		// ViewModels
 		builder.Services.AddTransient<MainPageViewModel>();

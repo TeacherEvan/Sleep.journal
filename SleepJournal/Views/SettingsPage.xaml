@@ -95,6 +95,43 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Security Section -->
+            <Label Text="Security"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   Margin="0,16,0,0"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
+
+            <Border Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                    StrokeThickness="1"
+                    Padding="12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+                
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Biometric Authentication"
+                               FontSize="16"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>
+                        <Label Text="Use fingerprint or face recognition to unlock the app"
+                               FontSize="12"
+                               IsVisible="{Binding BiometricAvailable}"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                        <Label Text="Biometric authentication not available on this device"
+                               FontSize="12"
+                               IsVisible="{Binding BiometricAvailable, Converter={StaticResource InvertedBoolConverter}}"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding BiometricAuthEnabled}"
+                            IsEnabled="{Binding BiometricAvailable}"
+                            VerticalOptions="Center"
+                            OnColor="{StaticResource Primary}"/>
+                </Grid>
+            </Border>
+
             <!-- Appearance Section -->
             <Label Text="Appearance"
                    FontSize="20"

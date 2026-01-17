@@ -12,6 +12,7 @@ namespace SleepJournal.ViewModels;
 public partial class SettingsPageViewModel : ObservableObject
 {
     private readonly IDataService _dataService;
+    private readonly IBiometricService _biometricService;
     private readonly ILogger<SettingsPageViewModel> _logger;
 
     [ObservableProperty]
@@ -21,10 +22,16 @@ public partial class SettingsPageViewModel : ObservableObject
     private bool enableReminders;
 
     [ObservableProperty]
-    private TimeSpan reminderTime = new(21, 0, 0); // Default 9:00 PM
+    private TimeSpan reminderTime = AppConstants.Defaults.ReminderTime; // Default 9:00 PM
 
     [ObservableProperty]
     private bool useDarkMode;
+
+    [ObservableProperty]
+    private bool biometricAuthEnabled;
+
+    [ObservableProperty]
+    private bool biometricAvailable;
 
     [ObservableProperty]
     private bool isSaving;
@@ -39,10 +46,15 @@ public partial class SettingsPageViewModel : ObservableObject
     /// Initializes a new instance of the <see cref="SettingsPageViewModel"/> class.
     /// </summary>
     /// <param name="dataService">Data service for database operations.</param>
+    /// <param name="biometricService">Biometric authentication service.</param>
     /// <param name="logger">Logger instance for tracking operations.</param>
-    public SettingsPageViewModel(IDataService dataService, ILogger<SettingsPageViewModel> logger)
+    public SettingsPageViewModel(
+        IDataService dataService, 
+        IBiometricService biometricService,
+        ILogger<SettingsPageViewModel> logger)
     {
         _dataService = dataService;
+        _biometricService = biometricService;
         _logger = logger;
     }
 
@@ -56,6 +68,10 @@ public partial class SettingsPageViewModel : ObservableObject
         {
             ErrorMessage = string.Empty;
             SuccessMessage = string.Empty;
+
+            // Load biometric availability
+            BiometricAvailable = await _biometricService.IsAvailableAsync();
+            BiometricAuthEnabled = await _biometricService.IsBiometricEnabledAsync();
 
             var settings = await _dataService.GetUserSettingsAsync(cancellationToken);
 
@@ -78,6 +94,26 @@ public partial class SettingsPageViewModel : ObservableObject
             _logger.LogError(ex, "Failed to load user settings");
             ErrorMessage = "Failed to load settings. Please try again.";
         }
+    }
+
+    /// <summary>
+    /// Toggles biometric authentication and records the preference.
+    /// </summary>
+    partial void OnBiometricAuthEnabledChanged(bool value)
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await _biometricService.SetBiometricEnabledAsync(value);
+                _logger.LogInformation("Biometric authentication {Status}", value ? "enabled" : "disabled");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to toggle biometric authentication");
+                ErrorMessage = "Failed to update biometric settings.";
+            }
+        });
     }
 
     /// <summary>

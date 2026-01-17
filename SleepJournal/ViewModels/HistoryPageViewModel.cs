@@ -12,7 +12,6 @@ namespace SleepJournal.ViewModels;
 /// </summary>
 public partial class HistoryPageViewModel : ObservableObject
 {
-    private const int PageSize = 20;
     private readonly IDataService _dataService;
     private readonly ILogger<HistoryPageViewModel> _logger;
 
@@ -60,7 +59,7 @@ public partial class HistoryPageViewModel : ObservableObject
             _currentPage = 0;
 
             var items = await _dataService.GetJournalEntriesAsync(cancellationToken);
-            var pagedItems = items.Take(PageSize).ToList();
+            var pagedItems = items.Take(AppConstants.Pagination.PageSize).ToList();
 
             Entries.Clear();
             foreach (var entry in pagedItems)
@@ -68,7 +67,7 @@ public partial class HistoryPageViewModel : ObservableObject
                 Entries.Add(entry);
             }
 
-            HasMoreItems = items.Count > PageSize;
+            HasMoreItems = items.Count > AppConstants.Pagination.PageSize;
             _currentPage = 1;
 
             _logger.LogInformation("Loaded {Count} journal entries (page 1)", Entries.Count);
@@ -98,14 +97,14 @@ public partial class HistoryPageViewModel : ObservableObject
             IsLoading = true;
 
             var allItems = await _dataService.GetJournalEntriesAsync(cancellationToken);
-            var pagedItems = allItems.Skip(_currentPage * PageSize).Take(PageSize).ToList();
+            var pagedItems = allItems.Skip(_currentPage * AppConstants.Pagination.PageSize).Take(AppConstants.Pagination.PageSize).ToList();
 
             foreach (var entry in pagedItems)
             {
                 Entries.Add(entry);
             }
 
-            HasMoreItems = allItems.Count > (_currentPage + 1) * PageSize;
+            HasMoreItems = allItems.Count > (_currentPage + 1) * AppConstants.Pagination.PageSize;
             _currentPage++;
 
             _logger.LogInformation("Loaded page {Page} with {Count} entries", _currentPage, pagedItems.Count);

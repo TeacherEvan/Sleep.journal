@@ -24,7 +24,7 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
     public SQLiteDataService(ILogger<SQLiteDataService> logger, string? dbPath = null)
     {
         _logger = logger;
-        _dbPath = dbPath ?? Path.Combine(FileSystem.AppDataDirectory, "sleepjournal.db");
+        _dbPath = dbPath ?? Path.Combine(FileSystem.AppDataDirectory, AppConstants.Database.FileName);
         _db = new SQLiteAsyncConnection(_dbPath);
         _logger.LogInformation("SQLiteDataService initialized with database path: {DbPath}", _dbPath);
     }

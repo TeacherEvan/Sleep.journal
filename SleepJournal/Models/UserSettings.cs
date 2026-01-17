@@ -26,7 +26,7 @@ public class UserSettings
     /// <summary>
     /// Gets or sets the time of day for reminder notifications.
     /// </summary>
-    public TimeSpan ReminderTime { get; set; } = new TimeSpan(21, 0, 0);
+    public TimeSpan ReminderTime { get; set; } = AppConstants.Defaults.ReminderTime;
 
     /// <summary>
     /// Gets or sets a value indicating whether dark mode is enabled.

@@ -52,19 +52,19 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
     /// Gets or sets the mood rating (1-10 scale).
     /// </summary>
     [ObservableProperty]
-    private int mood = 5;
+    private int mood = AppConstants.Validation.DefaultRating;
 
     /// <summary>
     /// Gets or sets the social anxiety level (1-10 scale).
     /// </summary>
     [ObservableProperty]
-    private int socialAnxiety = 5;
+    private int socialAnxiety = AppConstants.Validation.DefaultRating;
 
     /// <summary>
     /// Gets or sets the regretability rating (1-10 scale).
     /// </summary>
     [ObservableProperty]
-    private int regretability = 5;
+    private int regretability = AppConstants.Validation.DefaultRating;
 
     /// <summary>
     /// Gets or sets the error message displayed to the user.
@@ -82,7 +82,7 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
     /// Determines whether the save command can execute based on validation rules.
     /// </summary>
     private bool CanSave => !string.IsNullOrWhiteSpace(Text) &&
-                            Text.Length <= 200 &&
+                            Text.Length <= AppConstants.Validation.MaxTextLength &&
                             !IsSaving;
 
     /// <summary>
@@ -162,27 +162,27 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
             return false;
         }
 
-        if (Text.Length > 200)
+        if (Text.Length > AppConstants.Validation.MaxTextLength)
         {
-            ErrorMessage = "Text must be 200 characters or less.";
+            ErrorMessage = $"Text must be {AppConstants.Validation.MaxTextLength} characters or less.";
             return false;
         }
 
-        if (Mood < 1 || Mood > 10)
+        if (Mood < AppConstants.Validation.MinRating || Mood > AppConstants.Validation.MaxRating)
         {
-            ErrorMessage = "Mood must be between 1 and 10.";
+            ErrorMessage = $"Mood must be between {AppConstants.Validation.MinRating} and {AppConstants.Validation.MaxRating}.";
             return false;
         }
 
-        if (SocialAnxiety < 1 || SocialAnxiety > 10)
+        if (SocialAnxiety < AppConstants.Validation.MinRating || SocialAnxiety > AppConstants.Validation.MaxRating)
         {
-            ErrorMessage = "Social Anxiety must be between 1 and 10.";
+            ErrorMessage = $"Social Anxiety must be between {AppConstants.Validation.MinRating} and {AppConstants.Validation.MaxRating}.";
             return false;
         }
 
-        if (Regretability < 1 || Regretability > 10)
+        if (Regretability < AppConstants.Validation.MinRating || Regretability > AppConstants.Validation.MaxRating)
         {
-            ErrorMessage = "Regretability must be between 1 and 10.";
+            ErrorMessage = $"Regretability must be between {AppConstants.Validation.MinRating} and {AppConstants.Validation.MaxRating}.";
             return false;
         }
 
@@ -250,9 +250,9 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
     private void ResetForm()
     {
         Text = "";
-        Mood = 5;
-        SocialAnxiety = 5;
-        Regretability = 5;
+        Mood = AppConstants.Validation.DefaultRating;
+        SocialAnxiety = AppConstants.Validation.DefaultRating;
+        Regretability = AppConstants.Validation.DefaultRating;
         ErrorMessage = "";
         _editingEntryId = null;
     }
