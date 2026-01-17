@@ -1,0 +1,203 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SleepJournal.Models;
+using SleepJournal.Services;
+using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
+
+namespace SleepJournal.ViewModels;
+
+/// <summary>
+/// ViewModel for the journal entry history page with pagination support.
+/// </summary>
+public partial class HistoryPageViewModel : ObservableObject
+{
+    private const int PageSize = 20;
+    private readonly IDataService _dataService;
+    private readonly ILogger<HistoryPageViewModel> _logger;
+
+    [ObservableProperty]
+    private ObservableCollection<JournalEntry> entries = [];
+
+    [ObservableProperty]
+    private bool isLoading;
+
+    [ObservableProperty]
+    private bool isRefreshing;
+
+    [ObservableProperty]
+    private bool hasMoreItems = true;
+
+    [ObservableProperty]
+    private string errorMessage = string.Empty;
+
+    private int _currentPage;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HistoryPageViewModel"/> class.
+    /// </summary>
+    /// <param name="dataService">Data service for database operations.</param>
+    /// <param name="logger">Logger instance for tracking operations.</param>
+    public HistoryPageViewModel(IDataService dataService, ILogger<HistoryPageViewModel> logger)
+    {
+        _dataService = dataService;
+        _logger = logger;
+    }
+
+    /// <summary>
+    /// Loads the initial page of entries when navigating to the history page.
+    /// </summary>
+    [RelayCommand]
+    private async Task LoadEntriesAsync(CancellationToken cancellationToken = default)
+    {
+        if (IsLoading)
+            return;
+
+        try
+        {
+            IsLoading = true;
+            ErrorMessage = string.Empty;
+            _currentPage = 0;
+
+            var items = await _dataService.GetJournalEntriesAsync(cancellationToken);
+            var pagedItems = items.Take(PageSize).ToList();
+
+            Entries.Clear();
+            foreach (var entry in pagedItems)
+            {
+                Entries.Add(entry);
+            }
+
+            HasMoreItems = items.Count > PageSize;
+            _currentPage = 1;
+
+            _logger.LogInformation("Loaded {Count} journal entries (page 1)", Entries.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load journal entries");
+            ErrorMessage = "Failed to load entries. Please try again.";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Loads the next page of entries for infinite scrolling.
+    /// </summary>
+    [RelayCommand]
+    private async Task LoadMoreEntriesAsync(CancellationToken cancellationToken = default)
+    {
+        if (IsLoading || !HasMoreItems)
+            return;
+
+        try
+        {
+            IsLoading = true;
+
+            var allItems = await _dataService.GetJournalEntriesAsync(cancellationToken);
+            var pagedItems = allItems.Skip(_currentPage * PageSize).Take(PageSize).ToList();
+
+            foreach (var entry in pagedItems)
+            {
+                Entries.Add(entry);
+            }
+
+            HasMoreItems = allItems.Count > (_currentPage + 1) * PageSize;
+            _currentPage++;
+
+            _logger.LogInformation("Loaded page {Page} with {Count} entries", _currentPage, pagedItems.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load more entries");
+            ErrorMessage = "Failed to load more entries.";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    /// <summary>
+    /// Refreshes the entry list by reloading from the beginning.
+    /// </summary>
+    [RelayCommand]
+    private async Task RefreshEntriesAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            IsRefreshing = true;
+            await LoadEntriesAsync(cancellationToken);
+        }
+        finally
+        {
+            IsRefreshing = false;
+        }
+    }
+
+    /// <summary>
+    /// Deletes a journal entry after confirmation.
+    /// </summary>
+    [RelayCommand]
+    private async Task DeleteEntryAsync(JournalEntry entry, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+
+        try
+        {
+            bool confirmed = false;
+            if (Application.Current?.MainPage != null)
+            {
+                confirmed = await Application.Current.MainPage.DisplayAlert(
+                    "Delete Entry",
+                    $"Are you sure you want to delete the entry from {entry.EntryDate:MMM dd, yyyy}?",
+                    "Delete",
+                    "Cancel");
+            }
+
+            if (!confirmed)
+                return;
+
+            await _dataService.DeleteJournalEntryAsync(entry.Id, cancellationToken);
+            Entries.Remove(entry);
+
+            _logger.LogInformation("Deleted journal entry {EntryId}", entry.Id);
+
+            if (Application.Current?.MainPage != null)
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "Success",
+                    "Entry deleted successfully",
+                    "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete entry {EntryId}", entry.Id);
+            ErrorMessage = "Failed to delete entry. Please try again.";
+        }
+    }
+
+    /// <summary>
+    /// Navigates to edit an existing entry.
+    /// </summary>
+    [RelayCommand]
+    private async Task EditEntryAsync(JournalEntry entry)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+
+        try
+        {
+            await Shell.Current.GoToAsync($"MainPage?entryId={entry.Id}");
+            _logger.LogInformation("Navigating to edit entry {EntryId}", entry.Id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to navigate to edit entry {EntryId}", entry.Id);
+            ErrorMessage = "Failed to open entry for editing.";
+        }
+    }
+}

@@ -98,8 +98,17 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
         try
         {
             await EnsureInitializedAsync(cancellationToken);
-            await _db.InsertAsync(entry);
-            _logger.LogInformation("Journal entry saved successfully. ID: {EntryId}, CreatedAt: {CreatedAt}", entry.Id, entry.CreatedAt);
+
+            if (entry.Id == 0)
+            {
+                await _db.InsertAsync(entry);
+                _logger.LogInformation("Journal entry created successfully. ID: {EntryId}, CreatedAt: {CreatedAt}", entry.Id, entry.CreatedAt);
+            }
+            else
+            {
+                await _db.UpdateAsync(entry);
+                _logger.LogInformation("Journal entry updated successfully. ID: {EntryId}", entry.Id);
+            }
         }
         catch (Exception ex)
         {
@@ -127,6 +136,131 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to retrieve journal entries");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Retrieves all journal entries ordered by creation date (most recent first).
+    /// Alias for GetEntriesAsync for consistency with new naming.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>List of journal entries ordered by CreatedAt descending.</returns>
+    public Task<List<JournalEntry>> GetJournalEntriesAsync(CancellationToken cancellationToken = default)
+        => GetEntriesAsync(cancellationToken);
+
+    /// <summary>
+    /// Retrieves a specific journal entry by ID.
+    /// </summary>
+    /// <param name="id">The entry ID.</param>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>The journal entry if found, null otherwise.</returns>
+    public async Task<JournalEntry?> GetJournalEntryByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        try
+        {
+            await EnsureInitializedAsync(cancellationToken);
+            var entry = await _db.Table<JournalEntry>().Where(e => e.Id == id).FirstOrDefaultAsync();
+
+            if (entry == null)
+            {
+                _logger.LogWarning("Journal entry with ID {EntryId} not found", id);
+            }
+            else
+            {
+                _logger.LogInformation("Retrieved journal entry {EntryId}", id);
+            }
+
+            return entry;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve journal entry {EntryId}", id);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Deletes a journal entry by ID.
+    /// </summary>
+    /// <param name="id">The entry ID to delete.</param>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task DeleteJournalEntryAsync(int id, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        try
+        {
+            await EnsureInitializedAsync(cancellationToken);
+            await _db.DeleteAsync<JournalEntry>(id);
+            _logger.LogInformation("Deleted journal entry {EntryId}", id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete journal entry {EntryId}", id);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Retrieves user settings (singleton).
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>User settings or null if none exist.</returns>
+    public async Task<UserSettings?> GetUserSettingsAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        try
+        {
+            await EnsureInitializedAsync(cancellationToken);
+            var settings = await _db.Table<UserSettings>().FirstOrDefaultAsync();
+            _logger.LogInformation("Retrieved user settings");
+            return settings;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve user settings");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Saves user settings (upsert operation).
+    /// </summary>
+    /// <param name="settings">The settings to save.</param>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task SaveUserSettingsAsync(UserSettings settings, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        try
+        {
+            await EnsureInitializedAsync(cancellationToken);
+
+            // Ensure ID is always 1 (singleton)
+            settings.Id = 1;
+
+            var existing = await _db.Table<UserSettings>().FirstOrDefaultAsync();
+            if (existing != null)
+            {
+                await _db.UpdateAsync(settings);
+                _logger.LogInformation("Updated user settings");
+            }
+            else
+            {
+                await _db.InsertAsync(settings);
+                _logger.LogInformation("Created user settings");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save user settings");
             throw;
         }
     }

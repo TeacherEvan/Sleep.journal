@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:SleepJournal.ViewModels"
+             xmlns:models="clr-namespace:SleepJournal.Models"
+             x:Class="SleepJournal.Views.HistoryPage"
+             x:DataType="viewmodels:HistoryPageViewModel"
+             Title="Journal History">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Error Message Banner -->
+        <Frame Grid.Row="0"
+               BackgroundColor="#ffebee"
+               Padding="12"
+               Margin="8,8,8,0"
+               IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}">
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="#c62828"
+                   FontSize="14"/>
+        </Frame>
+
+        <!-- Entries List -->
+        <RefreshView Grid.Row="1"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshEntriesCommand}">
+
+            <CollectionView ItemsSource="{Binding Entries}"
+                            RemainingItemsThreshold="5"
+                            RemainingItemsThresholdReachedCommand="{Binding LoadMoreEntriesCommand}">
+
+                <CollectionView.EmptyView>
+                    <StackLayout Padding="40"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center">
+                        <Label Text="No entries yet"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                        <Label Text="Start journaling to see your history here"
+                               FontSize="14"
+                               Margin="0,8,0,0"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:JournalEntry">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete"
+                                               BackgroundColor="#ef5350"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HistoryPageViewModel}}, Path=DeleteEntryCommand}"
+                                               CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Frame Padding="12"
+                                   Margin="8,4"
+                                   BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}"
+                                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}">
+
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HistoryPageViewModel}}, Path=EditEntryCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                                      ColumnDefinitions="*,Auto">
+
+                                    <!-- Date -->
+                                    <Label Grid.Row="0"
+                                            Grid.Column="0"
+                                           Text="{Binding EntryDate, StringFormat='{0:dddd, MMMM dd, yyyy}'}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
+
+                                    <!-- Mood Badge -->
+                                    <Border Grid.Row="0"
+                                            Grid.Column="1"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                            StrokeThickness="0"
+                                            Padding="8,4">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Mood, StringFormat='😊 {0}/10'}"
+                                               TextColor="White"
+                                               FontSize="12"
+                                               FontAttributes="Bold"/>
+                                    </Border>
+
+                                    <!-- Text Preview -->
+                                    <Label Grid.Row="1"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                           Text="{Binding Text}"
+                                           FontSize="14"
+                                           MaxLines="2"
+                                           LineBreakMode="TailTruncation"
+                                           Margin="0,8,0,4"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>
+
+                                    <!-- Metadata Row -->
+                                    <HorizontalStackLayout Grid.Row="2"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                                           Spacing="12"
+                                                           Margin="0,4,0,0">
+                                        <Label Text="{Binding SocialAnxiety, StringFormat='Anxiety: {0}/10'}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                                        <Label Text="{Binding Regretability, StringFormat='Regret: {0}/10'}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                                    </HorizontalStackLayout>
+
+                                    <!-- Edit Indicator -->
+                                    <Label Grid.Row="3"
+                                            Grid.Column="1"
+                                           Text="Tap to edit →"
+                                           FontSize="11"
+                                           Margin="0,4,0,0"
+                                           HorizontalOptions="End"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                                </Grid>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.Footer>
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       IsVisible="{Binding IsLoading}"
+                                       HeightRequest="40"
+                                       Color="{StaticResource Primary}"/>
+                </CollectionView.Footer>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

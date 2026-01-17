@@ -4,11 +4,33 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:SleepJournal"
-    Title="SleepJournal">
+    xmlns:views="clr-namespace:SleepJournal.Views"
+    Title="Sleep Journal"
+    FlyoutBehavior="Flyout">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- Flyout Menu Items -->
+    <FlyoutItem Title="Journal"
+            Icon="home.png">
+        <ShellContent
+            Title="New Entry"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="History"
+            Icon="list.png">
+        <ShellContent
+            Title="View Entries"
+            ContentTemplate="{DataTemplate views:HistoryPage}"
+            Route="HistoryPage"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Settings"
+            Icon="settings.png">
+        <ShellContent
+            Title="Preferences"
+            ContentTemplate="{DataTemplate views:SettingsPage}"
+            Route="SettingsPage"/>
+    </FlyoutItem>
 
 </Shell>

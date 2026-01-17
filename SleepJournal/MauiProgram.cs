@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SleepJournal.Services;
 using SleepJournal.ViewModels;
+using SleepJournal.Views;
 
 namespace SleepJournal;
 
@@ -17,8 +18,18 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+		// Services
 		builder.Services.AddSingleton<IDataService, SQLiteDataService>();
+
+		// ViewModels
 		builder.Services.AddTransient<MainPageViewModel>();
+		builder.Services.AddTransient<HistoryPageViewModel>();
+		builder.Services.AddTransient<SettingsPageViewModel>();
+
+		// Pages
+		builder.Services.AddTransient<MainPage>();
+		builder.Services.AddTransient<HistoryPage>();
+		builder.Services.AddTransient<SettingsPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

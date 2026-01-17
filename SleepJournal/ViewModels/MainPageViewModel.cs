@@ -10,11 +10,13 @@ namespace SleepJournal.ViewModels;
 /// <summary>
 /// ViewModel for the main page, handling journal entry creation and validation.
 /// Implements MVVM pattern using CommunityToolkit.Mvvm source generators.
+/// Supports both creating new entries and editing existing ones via query parameters.
 /// </summary>
-public partial class MainPageViewModel : ObservableObject
+public partial class MainPageViewModel : ObservableObject, IQueryAttributable
 {
     private readonly IDataService _dataService;
     private readonly ILogger<MainPageViewModel> _logger;
+    private int? _editingEntryId;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MainPageViewModel"/> class.
@@ -26,6 +28,18 @@ public partial class MainPageViewModel : ObservableObject
         _dataService = dataService;
         _logger = logger;
     }
+
+    /// <summary>
+    /// Gets or sets the page title (changes based on edit mode).
+    /// </summary>
+    [ObservableProperty]
+    private string pageTitle = "New Journal Entry";
+
+    /// <summary>
+    /// Gets or sets the save button text (changes based on edit mode).
+    /// </summary>
+    [ObservableProperty]
+    private string saveButtonText = "Save Entry";
 
     /// <summary>
     /// Gets or sets the journal entry text (max 200 characters).
@@ -73,7 +87,7 @@ public partial class MainPageViewModel : ObservableObject
 
     /// <summary>
     /// Saves the current journal entry to the database.
-    /// Validates input, creates entry, and resets the form on success.
+    /// Validates input, creates or updates entry, and resets the form on success.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token for async operation.</param>
     [RelayCommand(CanExecute = nameof(CanSave))]
@@ -89,6 +103,7 @@ public partial class MainPageViewModel : ObservableObject
         {
             var entry = new JournalEntry
             {
+                Id = _editingEntryId ?? 0,
                 CreatedAt = DateTime.Now,
                 Text = Text.Trim(),
                 Mood = Mood,
@@ -97,10 +112,31 @@ public partial class MainPageViewModel : ObservableObject
             };
 
             await _dataService.SaveEntryAsync(entry, cancellationToken);
-            _logger.LogInformation("Journal entry saved successfully");
 
-            // Reset fields
-            ResetForm();
+            var action = _editingEntryId.HasValue ? "updated" : "saved";
+            _logger.LogInformation("Journal entry {Action} successfully", action);
+
+            // Reset form for new entries, navigate back for edits
+            if (_editingEntryId.HasValue)
+            {
+                // Navigate back to history after editing (only when Shell is available)
+                if (Shell.Current != null)
+                {
+                    try
+                    {
+                        await Shell.Current.GoToAsync("..");
+                    }
+                    catch (Exception navEx)
+                    {
+                        _logger.LogWarning(navEx, "Failed to navigate back after saving");
+                    }
+                }
+            }
+            else
+            {
+                // Reset form for new entries
+                ResetForm();
+            }
         }
         catch (OperationCanceledException)
         {
@@ -154,6 +190,61 @@ public partial class MainPageViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Receives query parameters when navigating to this page (for edit mode).
+    /// </summary>
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.ContainsKey("entryId") && int.TryParse(query["entryId"].ToString(), out var entryId))
+        {
+            _editingEntryId = entryId;
+            PageTitle = "Edit Journal Entry";
+            SaveButtonText = "Update Entry";
+
+            // Load the entry asynchronously
+            _ = LoadEntryForEditAsync(entryId);
+        }
+        else
+        {
+            // New entry mode
+            _editingEntryId = null;
+            PageTitle = "New Journal Entry";
+            SaveButtonText = "Save Entry";
+            ResetForm();
+        }
+    }
+
+    /// <summary>
+    /// Loads an existing entry for editing.
+    /// </summary>
+    private async Task LoadEntryForEditAsync(int entryId)
+    {
+        try
+        {
+            var entry = await _dataService.GetJournalEntryByIdAsync(entryId);
+
+            if (entry != null)
+            {
+                Text = entry.Text;
+                Mood = entry.Mood;
+                SocialAnxiety = entry.SocialAnxiety;
+                Regretability = entry.Regretability;
+
+                _logger.LogInformation("Loaded entry {EntryId} for editing", entryId);
+            }
+            else
+            {
+                ErrorMessage = "Entry not found.";
+                _logger.LogWarning("Entry {EntryId} not found", entryId);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load entry {EntryId}", entryId);
+            ErrorMessage = "Failed to load entry.";
+        }
+    }
+
+    /// <summary>
     /// Resets all form fields to their default values.
     /// </summary>
     private void ResetForm()
@@ -163,5 +254,6 @@ public partial class MainPageViewModel : ObservableObject
         SocialAnxiety = 5;
         Regretability = 5;
         ErrorMessage = "";
+        _editingEntryId = null;
     }
 }

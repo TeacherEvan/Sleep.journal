@@ -14,7 +14,22 @@ public class UserSettings
     public int Id { get; set; } = 1;
 
     /// <summary>
+    /// Gets or sets the user's display name.
+    /// </summary>
+    public string? UserName { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether reminder notifications are enabled.
     /// </summary>
     public bool EnableReminders { get; set; }
+
+    /// <summary>
+    /// Gets or sets the time of day for reminder notifications.
+    /// </summary>
+    public TimeSpan ReminderTime { get; set; } = new TimeSpan(21, 0, 0);
+
+    /// <summary>
+    /// Gets or sets a value indicating whether dark mode is enabled.
+    /// </summary>
+    public bool UseDarkMode { get; set; }
 }

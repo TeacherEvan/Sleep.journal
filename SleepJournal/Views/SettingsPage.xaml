@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:SleepJournal.ViewModels"
+             x:Class="SleepJournal.Views.SettingsPage"
+             x:DataType="viewmodels:SettingsPageViewModel"
+             Title="Settings">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20"
+                Spacing="16">
+
+            <!-- Success Message -->
+            <Frame BackgroundColor="#e8f5e9"
+                   Padding="12"
+                   IsVisible="{Binding SuccessMessage, Converter={StaticResource StringToBoolConverter}}">
+                <Label Text="{Binding SuccessMessage}"
+                       TextColor="#2e7d32"
+                       FontSize="14"/>
+            </Frame>
+
+            <!-- Error Message -->
+            <Frame BackgroundColor="#ffebee"
+                   Padding="12"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}">
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="#c62828"
+                       FontSize="14"/>
+            </Frame>
+
+            <!-- Profile Section -->
+            <Label Text="Profile"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
+
+            <Border Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                    StrokeThickness="1"
+                    Padding="12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="User Name"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                    <Entry Text="{Binding UserName}"
+                           Placeholder="Enter your name"
+                           FontSize="16"
+                           IsEnabled="{Binding IsSaving, Converter={StaticResource InvertedBoolConverter}}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Notifications Section -->
+            <Label Text="Notifications"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   Margin="0,16,0,0"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
+
+            <Border Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                    StrokeThickness="1"
+                    Padding="12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="Enable daily reminders"
+                               FontSize="16"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding EnableReminders}"
+                                OnColor="{StaticResource Primary}"/>
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="8"
+                                         IsVisible="{Binding EnableReminders}">
+                        <Label Text="Reminder Time"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                        <TimePicker Time="{Binding ReminderTime}"
+                                    FontSize="16"
+                                    Format="h:mm tt"/>
+                        <Label Text="You'll receive a notification to journal at this time each day"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Appearance Section -->
+            <Label Text="Appearance"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   Margin="0,16,0,0"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
+
+            <Border Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                    StrokeThickness="1"
+                    Padding="12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0"
+                            Spacing="4">
+                        <Label Text="Dark Mode"
+                               FontSize="16"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>
+                        <Label Text="Use dark theme throughout the app"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding UseDarkMode}"
+                            VerticalOptions="Center"
+                            OnColor="{StaticResource Primary}"/>
+                </Grid>
+            </Border>
+
+            <!-- Save Button -->
+            <Button Text="Save Settings"
+                    Command="{Binding SaveSettingsCommand}"
+                    IsEnabled="{Binding IsSaving, Converter={StaticResource InvertedBoolConverter}}"
+                    Margin="0,16,0,0"
+                    HeightRequest="50"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White">
+                <Button.Shadow>
+                    <Shadow Brush="{StaticResource Primary}"
+                            Offset="0,4"
+                            Radius="8"
+                            Opacity="0.3"/>
+                </Button.Shadow>
+            </Button>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsSaving}"
+                               IsVisible="{Binding IsSaving}"
+                               Color="{StaticResource Primary}"
+                               HeightRequest="40"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

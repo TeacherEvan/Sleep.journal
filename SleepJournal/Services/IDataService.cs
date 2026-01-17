@@ -21,4 +21,42 @@ public interface IDataService
     /// <param name="cancellationToken">Cancellation token for async operation.</param>
     /// <returns>A task representing the asynchronous operation with list of journal entries.</returns>
     Task<List<JournalEntry>> GetEntriesAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves all journal entries ordered by date descending.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>A task representing the asynchronous operation with list of journal entries.</returns>
+    Task<List<JournalEntry>> GetJournalEntriesAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a specific journal entry by ID.
+    /// </summary>
+    /// <param name="id">The entry ID.</param>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>The journal entry if found, null otherwise.</returns>
+    Task<JournalEntry?> GetJournalEntryByIdAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes a journal entry by ID.
+    /// </summary>
+    /// <param name="id">The entry ID to delete.</param>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task DeleteJournalEntryAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves user settings.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>User settings or null if none exist.</returns>
+    Task<UserSettings?> GetUserSettingsAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Saves user settings.
+    /// </summary>
+    /// <param name="settings">The settings to save.</param>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task SaveUserSettingsAsync(UserSettings settings, CancellationToken cancellationToken = default);
 }

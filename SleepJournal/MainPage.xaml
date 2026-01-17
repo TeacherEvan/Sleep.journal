@@ -23,7 +23,7 @@
                     <Label Text="🌙"
                            FontSize="40"
                            HorizontalOptions="Center"/>
-                    <Label Text="Sleep Journal"
+                    <Label Text="{Binding PageTitle}"
                            FontSize="28"
                            FontFamily="OpenSansSemibold"
                            TextColor="{StaticResource White}"
@@ -71,7 +71,7 @@
                             </Border.StrokeShape>
 
                             <Grid RowDefinitions="Auto,*,Auto"
-                                    RowSpacing="8">
+                                  RowSpacing="8">
                                 <Editor Grid.Row="1"
                                         Text="{Binding Text}"
                                         MaxLength="200"
@@ -249,7 +249,7 @@
                                     Opacity="0.25"/>
                         </Border.Shadow>
 
-                        <Button Text="Save Entry"
+                        <Button Text="{Binding SaveButtonText}"
                                 Command="{Binding SaveCommand}"
                                 BackgroundColor="Transparent"
                                 TextColor="{StaticResource White}"

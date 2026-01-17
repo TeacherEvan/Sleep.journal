@@ -38,4 +38,10 @@ public class JournalEntry
     /// Gets or sets the regretability rating (1-10 scale).
     /// </summary>
     public int Regretability { get; set; }
+
+    /// <summary>
+    /// Gets the date portion of CreatedAt for display purposes.
+    /// </summary>
+    [Ignore]
+    public DateTime EntryDate => CreatedAt.Date;
 }
