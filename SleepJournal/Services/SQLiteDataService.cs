@@ -4,6 +4,10 @@ using Microsoft.Extensions.Logging;
 
 namespace SleepJournal.Services;
 
+/// <summary>
+/// SQLite implementation of the data service for managing journal entries, user settings, and passages.
+/// Implements thread-safe lazy initialization and Write-Ahead Logging (WAL) for optimal performance.
+/// </summary>
 public class SQLiteDataService : IDataService, IAsyncDisposable
 {
     private readonly SQLiteAsyncConnection _db;
@@ -11,6 +15,10 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
     private readonly SemaphoreSlim _initializationLock = new(1, 1);
     private bool _isInitialized;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SQLiteDataService"/> class.
+    /// </summary>
+    /// <param name="logger">Logger instance for tracking database operations.</param>
     public SQLiteDataService(ILogger<SQLiteDataService> logger)
     {
         _logger = logger;
@@ -19,6 +27,12 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
         _logger.LogInformation("SQLiteDataService initialized with database path: {DbPath}", dbPath);
     }
 
+    /// <summary>
+    /// Ensures the database is initialized with all tables and optimizations.
+    /// Uses thread-safe lazy initialization pattern with SemaphoreSlim.
+    /// Enables Write-Ahead Logging (WAL) mode for better performance and concurrency.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
     private async Task EnsureInitializedAsync(CancellationToken cancellationToken = default)
     {
         if (_isInitialized)
@@ -30,12 +44,20 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
             if (_isInitialized)
                 return;
 
+            // Create tables
             await _db.CreateTableAsync<JournalEntry>();
             await _db.CreateTableAsync<UserSettings>();
             await _db.CreateTableAsync<Passage>();
 
+            // Enable WAL mode for better performance and concurrency
+            await _db.ExecuteAsync("PRAGMA journal_mode = WAL");
+            await _db.ExecuteAsync("PRAGMA synchronous = NORMAL");
+
+            // Create index on CreatedAt for faster ORDER BY queries
+            await _db.ExecuteAsync("CREATE INDEX IF NOT EXISTS idx_journalentry_createdat ON JournalEntry(CreatedAt DESC)");
+
             _isInitialized = true;
-            _logger.LogInformation("Database tables created successfully");
+            _logger.LogInformation("Database initialized successfully with WAL mode and indexes");
         }
         catch (Exception ex)
         {
@@ -48,6 +70,12 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Saves a journal entry to the database.
+    /// </summary>
+    /// <param name="entry">The journal entry to save.</param>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <exception cref="ArgumentNullException">Thrown when entry is null.</exception>
     public async Task SaveEntryAsync(JournalEntry entry, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(entry);
@@ -65,6 +93,11 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Retrieves all journal entries ordered by creation date (most recent first).
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token for async operation.</param>
+    /// <returns>List of journal entries ordered by CreatedAt descending.</returns>
     public async Task<List<JournalEntry>> GetEntriesAsync(CancellationToken cancellationToken = default)
     {
         try
@@ -81,6 +114,9 @@ public class SQLiteDataService : IDataService, IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Asynchronously disposes the database connection and releases resources.
+    /// </summary>
     public async ValueTask DisposeAsync()
     {
         if (_db != null)
