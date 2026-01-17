@@ -17,6 +17,14 @@
             Route="MainPage"/>
     </FlyoutItem>
 
+    <FlyoutItem Title="Statistics"
+            Icon="chart.png">
+        <ShellContent
+            Title="Analytics"
+            ContentTemplate="{DataTemplate views:StatisticsPage}"
+            Route="StatisticsPage"/>
+    </FlyoutItem>
+
     <FlyoutItem Title="History"
             Icon="list.png">
         <ShellContent

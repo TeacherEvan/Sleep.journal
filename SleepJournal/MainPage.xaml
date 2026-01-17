@@ -1,17 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:SleepJournal.Behaviors"
              x:Class="SleepJournal.MainPage"
              BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}"
              Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <!-- Responsive padding -->
+        <OnIdiom x:Key="ContentPadding" x:TypeArguments="Thickness">
+            <OnIdiom.Phone>24</OnIdiom.Phone>
+            <OnIdiom.Tablet>40</OnIdiom.Tablet>
+            <OnIdiom.Desktop>60</OnIdiom.Desktop>
+        </OnIdiom>
+        
+        <OnIdiom x:Key="HeaderPadding" x:TypeArguments="Thickness">
+            <OnIdiom.Phone>24,48,24,32</OnIdiom.Phone>
+            <OnIdiom.Tablet>40,60,40,40</OnIdiom.Tablet>
+            <OnIdiom.Desktop>60,80,60,50</OnIdiom.Desktop>
+        </OnIdiom>
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Spacing="0">
 
             <!-- Header Section with Gradient -->
             <Border BackgroundColor="{StaticResource Primary}"
-                    Padding="24,48,24,32"
+                    Padding="{StaticResource HeaderPadding}"
                     Margin="0,0,0,0">
+                <Border.Behaviors>
+                    <behaviors:FadeInBehavior Duration="300" />
+                </Border.Behaviors>
                 <Border.Shadow>
                     <Shadow Brush="{StaticResource Gray900Brush}"
                             Offset="0,4"

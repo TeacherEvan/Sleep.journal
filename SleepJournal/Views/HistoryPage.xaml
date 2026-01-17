@@ -7,7 +7,7 @@
              x:DataType="viewmodels:HistoryPageViewModel"
              Title="Journal History">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- Error Message Banner -->
         <Frame Grid.Row="0"
@@ -20,8 +20,31 @@
                    FontSize="14"/>
         </Frame>
 
+        <!-- Search Bar -->
+        <SearchBar Grid.Row="1"
+                   Placeholder="Search entries..."
+                   Text="{Binding SearchText}"
+                   SearchCommand="{Binding SearchCommand}"
+                   Margin="8,8,8,0" />
+
+        <!-- Filter Panel -->
+        <Frame Grid.Row="2"
+               Padding="12"
+               Margin="8,4,8,0"
+               BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+               IsVisible="{Binding IsFiltered}">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Active Filters" FontSize="12" FontAttributes="Bold" />
+                <Button Text="Clear Filters"
+                        Command="{Binding ClearFiltersCommand}"
+                        FontSize="12"
+                        Padding="8,4"
+                        HorizontalOptions="End" />
+            </VerticalStackLayout>
+        </Frame>
+
         <!-- Entries List -->
-        <RefreshView Grid.Row="1"
+        <RefreshView Grid.Row="3"
                      IsRefreshing="{Binding IsRefreshing}"
                      Command="{Binding RefreshEntriesCommand}">
 

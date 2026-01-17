@@ -30,7 +30,27 @@ public partial class HistoryPageViewModel : ObservableObject
     [ObservableProperty]
     private string errorMessage = string.Empty;
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SearchCommand))]
+    private string searchText = string.Empty;
+
+    [ObservableProperty]
+    private int? minMood;
+
+    [ObservableProperty]
+    private int? maxMood;
+
+    [ObservableProperty]
+    private DateTime? startDate;
+
+    [ObservableProperty]
+    private DateTime? endDate;
+
+    [ObservableProperty]
+    private bool isFiltered;
+
     private int _currentPage;
+    private List<JournalEntry> _allEntries = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HistoryPageViewModel"/> class.
@@ -58,8 +78,9 @@ public partial class HistoryPageViewModel : ObservableObject
             ErrorMessage = string.Empty;
             _currentPage = 0;
 
-            var items = await _dataService.GetJournalEntriesAsync(cancellationToken);
-            var pagedItems = items.Take(AppConstants.Pagination.PageSize).ToList();
+            _allEntries = (await _dataService.GetJournalEntriesAsync(cancellationToken)).ToList();
+            var filteredItems = ApplyFilters(_allEntries);
+            var pagedItems = filteredItems.Take(AppConstants.Pagination.PageSize).ToList();
 
             Entries.Clear();
             foreach (var entry in pagedItems)
@@ -67,10 +88,10 @@ public partial class HistoryPageViewModel : ObservableObject
                 Entries.Add(entry);
             }
 
-            HasMoreItems = items.Count > AppConstants.Pagination.PageSize;
+            HasMoreItems = filteredItems.Count > AppConstants.Pagination.PageSize;
             _currentPage = 1;
 
-            _logger.LogInformation("Loaded {Count} journal entries (page 1)", Entries.Count);
+            _logger.LogInformation("Loaded {Count} journal entries (page 1), filtered from {Total}", Entries.Count, _allEntries.Count);
         }
         catch (Exception ex)
         {
@@ -96,15 +117,15 @@ public partial class HistoryPageViewModel : ObservableObject
         {
             IsLoading = true;
 
-            var allItems = await _dataService.GetJournalEntriesAsync(cancellationToken);
-            var pagedItems = allItems.Skip(_currentPage * AppConstants.Pagination.PageSize).Take(AppConstants.Pagination.PageSize).ToList();
+            var filteredItems = ApplyFilters(_allEntries);
+            var pagedItems = filteredItems.Skip(_currentPage * AppConstants.Pagination.PageSize).Take(AppConstants.Pagination.PageSize).ToList();
 
             foreach (var entry in pagedItems)
             {
                 Entries.Add(entry);
             }
 
-            HasMoreItems = allItems.Count > (_currentPage + 1) * AppConstants.Pagination.PageSize;
+            HasMoreItems = filteredItems.Count > (_currentPage + 1) * AppConstants.Pagination.PageSize;
             _currentPage++;
 
             _logger.LogInformation("Loaded page {Page} with {Count} entries", _currentPage, pagedItems.Count);
@@ -198,5 +219,73 @@ public partial class HistoryPageViewModel : ObservableObject
             _logger.LogError(ex, "Failed to navigate to edit entry {EntryId}", entry.Id);
             ErrorMessage = "Failed to open entry for editing.";
         }
+    }
+
+    /// <summary>
+    /// Searches entries based on search text.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanSearch))]
+    private async Task SearchAsync(CancellationToken cancellationToken = default)
+    {
+        await LoadEntriesAsync(cancellationToken);
+        IsFiltered = !string.IsNullOrWhiteSpace(SearchText) || MinMood.HasValue || MaxMood.HasValue || StartDate.HasValue || EndDate.HasValue;
+        _logger.LogInformation("Search executed with text: '{SearchText}'", SearchText);
+    }
+
+    private bool CanSearch => !IsLoading;
+
+    /// <summary>
+    /// Clears all filters and reloads all entries.
+    /// </summary>
+    [RelayCommand]
+    private async Task ClearFiltersAsync(CancellationToken cancellationToken = default)
+    {
+        SearchText = string.Empty;
+        MinMood = null;
+        MaxMood = null;
+        StartDate = null;
+        EndDate = null;
+        IsFiltered = false;
+        await LoadEntriesAsync(cancellationToken);
+        _logger.LogInformation("Filters cleared");
+    }
+
+    /// <summary>
+    /// Applies search and filter criteria to the entry list.
+    /// </summary>
+    private List<JournalEntry> ApplyFilters(List<JournalEntry> entries)
+    {
+        var filtered = entries.AsEnumerable();
+
+        // Text search
+        if (!string.IsNullOrWhiteSpace(SearchText))
+        {
+            var searchLower = SearchText.ToLowerInvariant();
+            filtered = filtered.Where(e => e.Text.ToLowerInvariant().Contains(searchLower));
+        }
+
+        // Mood filters
+        if (MinMood.HasValue)
+        {
+            filtered = filtered.Where(e => e.Mood >= MinMood.Value);
+        }
+
+        if (MaxMood.HasValue)
+        {
+            filtered = filtered.Where(e => e.Mood <= MaxMood.Value);
+        }
+
+        // Date range filters
+        if (StartDate.HasValue)
+        {
+            filtered = filtered.Where(e => e.CreatedAt.Date >= StartDate.Value.Date);
+        }
+
+        if (EndDate.HasValue)
+        {
+            filtered = filtered.Where(e => e.CreatedAt.Date <= EndDate.Value.Date);
+        }
+
+        return filtered.ToList();
     }
 }
