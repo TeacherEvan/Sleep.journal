@@ -1,0 +1,221 @@
+# .NET MAUI / C# / Visual Studio gitignore
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio cache/options
+.vs/
+.vscode/
+*.cache
+*.cachefile
+
+## Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## StyleCop
+StyleCopReport.xml
+
+## Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+
+## Code Coverage
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+lcov.info
+coverage-report/
+TestResults/
+opencover.xml
+
+## MAUI / Xamarin
+*.apk
+*.aab
+*.ap_
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.app
+
+## Android
+[Ll]ocal.properties
+.aml/
+.gradle/
+.navigation/
+captures/
+output.json
+
+## iOS / Mac
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+*.xcscmblueprint
+iOSInjectionProject/
+
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+AppPackages/
+BundleArtifacts/
+
+## Database files (local development)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.db3
+
+## Backup & Temporary files
+*~
+*.swp
+*.bak
+*.tmp
+*.log
+*.orig
+*.rej
+
+## OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+## ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## TeamCity
+_TeamCity*
+
+## DotCover
+*.dotCover
+
+## NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+## Installshield
+[Ee]xpress/
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/Html2
+DocProject/Help/html
+
+## Publish profiles
+*.Publish.xml
+*.pubxml
+*.publishproj
+
+## Web workbench
+.sass-cache/
+
+## Others
+ClientBin/
+~$*
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+
+## Backup folder for Package Reference Convert
+MigrationBackup/
+
+## Ionide (F#)
+.ionide/
+
+## Fody - auto-generated
+FodyWeavers.xsd
+
+## MonoGame
+*.mgcontent
+
+## MAUI Platform Resource Cache
+**/Resources/**/*.designer.cs
+**/Resources/**/*.g.cs
+
+## MAUI Intermediate Output
+**/*.Resources.designer.cs
+**/Resources/Resource.designer.cs
+
+## Project-specific
+sleepjournal.db
+sleepjournal.db-shm
+sleepjournal.db-wal
+test_*.db
