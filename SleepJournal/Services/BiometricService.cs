@@ -61,7 +61,7 @@ public class BiometricService : IBiometricService
             var result = await SecureStorage.Default.GetAsync("test_biometric");
             // If we can access secure storage, biometrics may be available
             // Note: MAUI doesn't have direct biometric API, so we use OS-level features
-            
+
 #if ANDROID || IOS || MACCATALYST
             return true; // Platform supports biometrics
 #else
@@ -84,7 +84,7 @@ public class BiometricService : IBiometricService
             // In production, you would use platform-specific APIs:
             // Android: BiometricPrompt
             // iOS: LAContext (LocalAuthentication)
-            
+
             var isEnabled = await IsBiometricEnabledAsync();
             if (!isEnabled)
             {
@@ -150,7 +150,7 @@ public class BiometricService : IBiometricService
                 return false;
 
             var lastAuthStr = await SecureStorage.Default.GetAsync(AppConstants.Security.LastAuthTimestampKey);
-            
+
             if (string.IsNullOrEmpty(lastAuthStr))
                 return true; // First time, requires auth
 
@@ -158,10 +158,10 @@ public class BiometricService : IBiometricService
             {
                 var elapsed = DateTime.UtcNow - lastAuth;
                 var requiresAuth = elapsed.TotalMinutes >= AppConstants.Security.AuthSessionMinutes;
-                
-                _logger.LogInformation("Last auth: {LastAuth}, Elapsed: {Elapsed}min, Requires auth: {RequiresAuth}", 
+
+                _logger.LogInformation("Last auth: {LastAuth}, Elapsed: {Elapsed}min, Requires auth: {RequiresAuth}",
                     lastAuth, elapsed.TotalMinutes, requiresAuth);
-                
+
                 return requiresAuth;
             }
 
@@ -179,7 +179,7 @@ public class BiometricService : IBiometricService
     {
         try
         {
-            await SecureStorage.Default.SetAsync(AppConstants.Security.LastAuthTimestampKey, 
+            await SecureStorage.Default.SetAsync(AppConstants.Security.LastAuthTimestampKey,
                 DateTime.UtcNow.ToString("O"));
             _logger.LogInformation("Recorded successful authentication");
         }

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using SleepJournal.Models;
 using SleepJournal.Services;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace SleepJournal.ViewModels;
 

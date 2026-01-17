@@ -1,3 +1,6 @@
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+
 namespace SleepJournal.Behaviors;
 
 /// <summary>
