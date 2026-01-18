@@ -8,7 +8,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20"
-                Spacing="16">
+                             Spacing="16">
 
             <!-- Success Message -->
             <Frame BackgroundColor="#e8f5e9"
@@ -109,9 +109,10 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="8"/>
                 </Border.StrokeShape>
-                
+
                 <Grid ColumnDefinitions="*,Auto">
-                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <VerticalStackLayout Grid.Column="0"
+                            Spacing="4">
                         <Label Text="Biometric Authentication"
                                FontSize="16"
                                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>
@@ -149,7 +150,7 @@
 
                 <Grid ColumnDefinitions="*,Auto">
                     <VerticalStackLayout Grid.Column="0"
-                            Spacing="4">
+                                         Spacing="4">
                         <Label Text="Dark Mode"
                                FontSize="16"
                                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>

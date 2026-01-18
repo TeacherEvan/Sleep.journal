@@ -8,13 +8,15 @@
 
     <ContentPage.Resources>
         <!-- Responsive padding -->
-        <OnIdiom x:Key="ContentPadding" x:TypeArguments="Thickness">
+        <OnIdiom x:Key="ContentPadding"
+                x:TypeArguments="Thickness">
             <OnIdiom.Phone>24</OnIdiom.Phone>
             <OnIdiom.Tablet>40</OnIdiom.Tablet>
             <OnIdiom.Desktop>60</OnIdiom.Desktop>
         </OnIdiom>
-        
-        <OnIdiom x:Key="HeaderPadding" x:TypeArguments="Thickness">
+
+        <OnIdiom x:Key="HeaderPadding"
+                x:TypeArguments="Thickness">
             <OnIdiom.Phone>24,48,24,32</OnIdiom.Phone>
             <OnIdiom.Tablet>40,60,40,40</OnIdiom.Tablet>
             <OnIdiom.Desktop>60,80,60,50</OnIdiom.Desktop>
@@ -29,7 +31,7 @@
                     Padding="{StaticResource HeaderPadding}"
                     Margin="0,0,0,0">
                 <Border.Behaviors>
-                    <behaviors:FadeInBehavior Duration="300" />
+                    <behaviors:FadeInBehavior Duration="300"/>
                 </Border.Behaviors>
                 <Border.Shadow>
                     <Shadow Brush="{StaticResource Gray900Brush}"

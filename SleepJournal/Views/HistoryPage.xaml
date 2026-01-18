@@ -25,7 +25,7 @@
                    Placeholder="Search entries..."
                    Text="{Binding SearchText}"
                    SearchCommand="{Binding SearchCommand}"
-                   Margin="8,8,8,0" />
+                   Margin="8,8,8,0"/>
 
         <!-- Filter Panel -->
         <Frame Grid.Row="2"
@@ -34,12 +34,14 @@
                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
                IsVisible="{Binding IsFiltered}">
             <VerticalStackLayout Spacing="8">
-                <Label Text="Active Filters" FontSize="12" FontAttributes="Bold" />
+                <Label Text="Active Filters"
+                        FontSize="12"
+                        FontAttributes="Bold"/>
                 <Button Text="Clear Filters"
                         Command="{Binding ClearFiltersCommand}"
                         FontSize="12"
                         Padding="8,4"
-                        HorizontalOptions="End" />
+                        HorizontalOptions="End"/>
             </VerticalStackLayout>
         </Frame>
 
@@ -97,7 +99,7 @@
 
                                     <!-- Date -->
                                     <Label Grid.Row="0"
-                                            Grid.Column="0"
+                                           Grid.Column="0"
                                            Text="{Binding EntryDate, StringFormat='{0:dddd, MMMM dd, yyyy}'}"
                                            FontSize="16"
                                            FontAttributes="Bold"
@@ -120,8 +122,8 @@
 
                                     <!-- Text Preview -->
                                     <Label Grid.Row="1"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="2"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
                                            Text="{Binding Text}"
                                            FontSize="14"
                                            MaxLines="2"
@@ -131,8 +133,8 @@
 
                                     <!-- Metadata Row -->
                                     <HorizontalStackLayout Grid.Row="2"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="2"
+                                                           Grid.Column="0"
+                                                           Grid.ColumnSpan="2"
                                                            Spacing="12"
                                                            Margin="0,4,0,0">
                                         <Label Text="{Binding SocialAnxiety, StringFormat='Anxiety: {0}/10'}"
@@ -145,7 +147,7 @@
 
                                     <!-- Edit Indicator -->
                                     <Label Grid.Row="3"
-                                            Grid.Column="1"
+                                           Grid.Column="1"
                                            Text="Tap to edit →"
                                            FontSize="11"
                                            Margin="0,4,0,0"

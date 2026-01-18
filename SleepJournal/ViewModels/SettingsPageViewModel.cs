@@ -49,7 +49,7 @@ public partial class SettingsPageViewModel : ObservableObject
     /// <param name="biometricService">Biometric authentication service.</param>
     /// <param name="logger">Logger instance for tracking operations.</param>
     public SettingsPageViewModel(
-        IDataService dataService, 
+        IDataService dataService,
         IBiometricService biometricService,
         ILogger<SettingsPageViewModel> logger)
     {

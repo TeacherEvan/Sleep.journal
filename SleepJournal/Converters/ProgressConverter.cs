@@ -14,7 +14,7 @@ public class ProgressConverter : IValueConverter
             // Convert 0-10 scale to 0.0-1.0 progress
             return doubleValue / 10.0;
         }
-        
+
         if (value is int intValue)
         {
             return intValue / 10.0;
