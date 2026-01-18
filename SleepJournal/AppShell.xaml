@@ -8,9 +8,16 @@
     Title="Sleep Journal"
     FlyoutBehavior="Flyout">
 
+    <!-- Welcome Screen (Hidden from menu) -->
+    <ShellContent
+        Title="Welcome"
+        ContentTemplate="{DataTemplate views:WelcomePage}"
+        Route="WelcomePage"
+        IsVisible="False"/>
+
     <!-- Flyout Menu Items -->
     <FlyoutItem Title="Journal"
-            Icon="home.png">
+                Icon="home.png">
         <ShellContent
             Title="New Entry"
             ContentTemplate="{DataTemplate local:MainPage}"
@@ -18,7 +25,7 @@
     </FlyoutItem>
 
     <FlyoutItem Title="Statistics"
-            Icon="chart.png">
+                Icon="chart.png">
         <ShellContent
             Title="Analytics"
             ContentTemplate="{DataTemplate views:StatisticsPage}"
@@ -26,7 +33,7 @@
     </FlyoutItem>
 
     <FlyoutItem Title="History"
-            Icon="list.png">
+                Icon="list.png">
         <ShellContent
             Title="View Entries"
             ContentTemplate="{DataTemplate views:HistoryPage}"
@@ -34,7 +41,7 @@
     </FlyoutItem>
 
     <FlyoutItem Title="Settings"
-            Icon="settings.png">
+                Icon="settings.png">
         <ShellContent
             Title="Preferences"
             ContentTemplate="{DataTemplate views:SettingsPage}"
