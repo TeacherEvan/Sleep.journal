@@ -11,14 +11,16 @@ namespace SleepJournal.Tests.ViewModels;
 public class MainPageViewModelTests
 {
     private readonly Mock<IDataService> _mockDataService;
+    private readonly Mock<IAudioService> _mockAudioService;
     private readonly Mock<ILogger<MainPageViewModel>> _mockLogger;
     private readonly MainPageViewModel _viewModel;
 
     public MainPageViewModelTests()
     {
         _mockDataService = new Mock<IDataService>();
+        _mockAudioService = new Mock<IAudioService>();
         _mockLogger = new Mock<ILogger<MainPageViewModel>>();
-        _viewModel = new MainPageViewModel(_mockDataService.Object, _mockLogger.Object);
+        _viewModel = new MainPageViewModel(_mockDataService.Object, _mockAudioService.Object, _mockLogger.Object);
     }
 
     #region Property Tests

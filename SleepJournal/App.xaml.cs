@@ -11,7 +11,12 @@ public partial class App : Application
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		var shell = new AppShell();
+		// Get service provider from the activation state's context
+		var serviceProvider = activationState?.Context?.Services
+			?? IPlatformApplication.Current?.Services
+			?? throw new InvalidOperationException("Cannot get service provider");
+
+		var shell = serviceProvider.GetRequiredService<AppShell>();
 
 		// Check if this is the first run
 		var isFirstRun = Preferences.Get(FirstRunKey, true);
@@ -19,10 +24,9 @@ public partial class App : Application
 		if (isFirstRun)
 		{
 			// Show welcome screen on first run
-			shell.CurrentItem = shell.Items[0]; // Default to first item
 			MainThread.BeginInvokeOnMainThread(async () =>
 			{
-				await Shell.Current.GoToAsync("//WelcomePage");
+				await Shell.Current.GoToAsync(nameof(Views.WelcomePage));
 				Preferences.Set(FirstRunKey, false);
 			});
 		}

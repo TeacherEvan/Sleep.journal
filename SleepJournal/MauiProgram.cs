@@ -31,11 +31,12 @@ public static class MauiProgram
 		builder.Services.AddTransient<StatisticsViewModel>();
 		builder.Services.AddTransient<WelcomePageViewModel>();
 
-		// Pages
-		builder.Services.AddTransient<MainPage>();
-		builder.Services.AddTransient<HistoryPage>();
-		builder.Services.AddTransient<SettingsPage>();
-		builder.Services.AddTransient<StatisticsPage>();
+		// Shell and Pages - Pages used in ShellContent need singleton to avoid recreation
+		builder.Services.AddSingleton<AppShell>();
+		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<HistoryPage>();
+		builder.Services.AddSingleton<SettingsPage>();
+		builder.Services.AddSingleton<StatisticsPage>();
 		builder.Services.AddTransient<WelcomePage>();
 
 #if DEBUG

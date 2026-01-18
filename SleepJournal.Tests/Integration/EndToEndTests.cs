@@ -12,6 +12,7 @@ public class EndToEndTests : IAsyncLifetime
 {
     private SQLiteDataService _dataService = null!;
     private MainPageViewModel _viewModel = null!;
+    private Mock<IAudioService> _mockAudioService = null!;
     private Mock<ILogger<SQLiteDataService>> _serviceLogger = null!;
     private Mock<ILogger<MainPageViewModel>> _viewModelLogger = null!;
     private string _testDbPath = null!;
@@ -21,9 +22,10 @@ public class EndToEndTests : IAsyncLifetime
         _testDbPath = Path.Combine(Path.GetTempPath(), $"e2e_test_{Guid.NewGuid()}.db");
         _serviceLogger = new Mock<ILogger<SQLiteDataService>>();
         _viewModelLogger = new Mock<ILogger<MainPageViewModel>>();
+        _mockAudioService = new Mock<IAudioService>();
 
         _dataService = new SQLiteDataService(_serviceLogger.Object, _testDbPath);
-        _viewModel = new MainPageViewModel(_dataService, _viewModelLogger.Object);
+        _viewModel = new MainPageViewModel(_dataService, _mockAudioService.Object, _viewModelLogger.Object);
 
         // Initialize database
         await Task.Delay(100); // Give time for async initialization
