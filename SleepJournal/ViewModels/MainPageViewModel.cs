@@ -15,6 +15,7 @@ namespace SleepJournal.ViewModels;
 public partial class MainPageViewModel : ObservableObject, IQueryAttributable
 {
     private readonly IDataService _dataService;
+    private readonly IAudioService _audioService;
     private readonly ILogger<MainPageViewModel> _logger;
     private int? _editingEntryId;
 
@@ -22,10 +23,12 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
     /// Initializes a new instance of the <see cref="MainPageViewModel"/> class.
     /// </summary>
     /// <param name="dataService">Data service for persisting journal entries.</param>
+    /// <param name="audioService">Audio service for playing feedback sounds.</param>
     /// <param name="logger">Logger instance for tracking operations.</param>
-    public MainPageViewModel(IDataService dataService, ILogger<MainPageViewModel> logger)
+    public MainPageViewModel(IDataService dataService, IAudioService audioService, ILogger<MainPageViewModel> logger)
     {
         _dataService = dataService;
+        _audioService = audioService;
         _logger = logger;
     }
 
@@ -98,6 +101,9 @@ public partial class MainPageViewModel : ObservableObject, IQueryAttributable
 
         IsSaving = true;
         ErrorMessage = "";
+
+        // Play drop sound on button click
+        _ = _audioService.PlayDropSoundAsync(cancellationToken);
 
         try
         {

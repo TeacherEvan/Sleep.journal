@@ -13,6 +13,7 @@ public partial class SettingsPageViewModel : ObservableObject
 {
     private readonly IDataService _dataService;
     private readonly IBiometricService _biometricService;
+    private readonly INotificationService _notificationService;
     private readonly ILogger<SettingsPageViewModel> _logger;
 
     [ObservableProperty]
@@ -47,14 +48,17 @@ public partial class SettingsPageViewModel : ObservableObject
     /// </summary>
     /// <param name="dataService">Data service for database operations.</param>
     /// <param name="biometricService">Biometric authentication service.</param>
+    /// <param name="notificationService">Notification service for scheduling reminders.</param>
     /// <param name="logger">Logger instance for tracking operations.</param>
     public SettingsPageViewModel(
         IDataService dataService,
         IBiometricService biometricService,
+        INotificationService notificationService,
         ILogger<SettingsPageViewModel> logger)
     {
         _dataService = dataService;
         _biometricService = biometricService;
+        _notificationService = notificationService;
         _logger = logger;
     }
 
@@ -144,6 +148,32 @@ public partial class SettingsPageViewModel : ObservableObject
             };
 
             await _dataService.SaveUserSettingsAsync(settings, cancellationToken);
+
+            // Schedule or cancel notifications based on settings
+            if (EnableReminders)
+            {
+                var hasPermission = await _notificationService.RequestPermissionsAsync();
+                if (hasPermission)
+                {
+                    await _notificationService.ScheduleBedtimeReminderAsync(
+                        ReminderTime.Hours,
+                        ReminderTime.Minutes,
+                        "Time to write in your sleep journal! 💤",
+                        cancellationToken);
+                    _logger.LogInformation("Scheduled bedtime reminder at {Time}", ReminderTime);
+                }
+                else
+                {
+                    EnableReminders = false;
+                    ErrorMessage = "Notification permissions denied. Please enable in system settings.";
+                    return;
+                }
+            }
+            else
+            {
+                await _notificationService.CancelAllNotificationsAsync();
+                _logger.LogInformation("Cancelled all notifications");
+            }
 
             SuccessMessage = "Settings saved successfully!";
             _logger.LogInformation("Saved user settings for: {UserName}", trimmedUserName);
