@@ -152,7 +152,9 @@ public partial class SettingsPageViewModel : ObservableObject
             // Schedule or cancel notifications based on settings
             if (EnableReminders)
             {
+                _logger.LogInformation("Requesting notification permissions for reminders");
                 var hasPermission = await _notificationService.RequestPermissionsAsync();
+
                 if (hasPermission)
                 {
                     await _notificationService.ScheduleBedtimeReminderAsync(
@@ -161,11 +163,16 @@ public partial class SettingsPageViewModel : ObservableObject
                         "Time to write in your sleep journal! 💤",
                         cancellationToken);
                     _logger.LogInformation("Scheduled bedtime reminder at {Time}", ReminderTime);
+                    SuccessMessage = "Settings saved! Reminder scheduled.";
                 }
                 else
                 {
                     EnableReminders = false;
-                    ErrorMessage = "Notification permissions denied. Please enable in system settings.";
+                    settings.EnableReminders = false;
+                    await _dataService.SaveUserSettingsAsync(settings, cancellationToken);
+
+                    ErrorMessage = "Notification permissions denied. Please enable notifications in your device settings.";
+                    _logger.LogWarning("User denied notification permissions");
                     return;
                 }
             }
@@ -173,9 +180,9 @@ public partial class SettingsPageViewModel : ObservableObject
             {
                 await _notificationService.CancelAllNotificationsAsync();
                 _logger.LogInformation("Cancelled all notifications");
+                SuccessMessage = "Settings saved successfully!";
             }
 
-            SuccessMessage = "Settings saved successfully!";
             _logger.LogInformation("Saved user settings for: {UserName}", trimmedUserName);
 
             // Apply dark mode immediately

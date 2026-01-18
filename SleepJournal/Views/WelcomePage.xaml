@@ -1,261 +1,123 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:SleepJournal.ViewModels"
-             xmlns:behaviors="clr-namespace:SleepJournal.Behaviors"
-             x:Class="SleepJournal.Views.WelcomePage"
-             x:DataType="viewmodels:WelcomePageViewModel"
-             Shell.NavBarIsVisible="False"
-             Shell.TabBarIsVisible="False"
-             BackgroundColor="{StaticResource OffBlack}">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:SleepJournal.ViewModels"
+    xmlns:behaviors="clr-namespace:SleepJournal.Behaviors" x:Class="SleepJournal.Views.WelcomePage" x:DataType="viewmodels:WelcomePageViewModel" Shell.NavBarIsVisible="False" Shell.TabBarIsVisible="False" BackgroundColor="{StaticResource OffBlack}" Appearing="OnPageAppearing">
 
     <!-- Animated Gradient Background -->
     <ContentPage.Resources>
-        <LinearGradientBrush x:Key="NightSkyGradient"
-                StartPoint="0,0"
-                EndPoint="0,1">
-            <GradientStop Color="#1A1A2E"
-                    Offset="0.0"/>
-            <GradientStop Color="#16213E"
-                    Offset="0.4"/>
-            <GradientStop Color="#0F3460"
-                    Offset="0.8"/>
-            <GradientStop Color="#533483"
-                    Offset="1.0"/>
+        <LinearGradientBrush x:Key="NightSkyGradient" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#1A1A2E" Offset="0.0"/>
+            <GradientStop Color="#16213E" Offset="0.4"/>
+            <GradientStop Color="#0F3460" Offset="0.8"/>
+            <GradientStop Color="#533483" Offset="1.0"/>
         </LinearGradientBrush>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto"
-            Background="{StaticResource NightSkyGradient}">
+    <Grid RowDefinitions="Auto,*,Auto" Background="{StaticResource NightSkyGradient}">
 
         <!-- Animated stars background -->
-        <BoxView Grid.RowSpan="3"
-                 Opacity="0.15"
-                 BackgroundColor="Transparent">
+        <BoxView Grid.RowSpan="3" Opacity="0.15" BackgroundColor="Transparent">
             <BoxView.Behaviors>
                 <behaviors:TwinkleStarsBehavior/>
             </BoxView.Behaviors>
         </BoxView>
 
         <!-- Top Section - Logo & Title -->
-        <VerticalStackLayout Grid.Row="0"
-                             Spacing="20"
-                             Padding="40,80,40,40"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Start">
+        <VerticalStackLayout Grid.Row="0" Spacing="20" Padding="40,80,40,40" HorizontalOptions="Center" VerticalOptions="Start">
 
             <!-- Moon Icon with Glow Effect -->
-            <Border BackgroundColor="Transparent"
-                    StrokeThickness="0"
-                    WidthRequest="140"
-                    HeightRequest="140"
-                    HorizontalOptions="Center">
+            <Border BackgroundColor="Transparent" StrokeThickness="0" WidthRequest="140" HeightRequest="140" HorizontalOptions="Center">
                 <Border.Shadow>
-                    <Shadow Brush="{StaticResource PrimaryDark}"
-                            Opacity="0.6"
-                            Radius="40"
-                            Offset="0,0"/>
+                    <Shadow Brush="{StaticResource PrimaryDark}" Opacity="0.6" Radius="40" Offset="0,0"/>
                 </Border.Shadow>
 
                 <Grid>
                     <!-- Outer glow circle -->
-                    <Ellipse Fill="{StaticResource PrimaryDark}"
-                             Opacity="0.3"
-                             WidthRequest="140"
-                             HeightRequest="140"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center"/>
+                    <Ellipse Fill="{StaticResource PrimaryDark}" Opacity="0.3" WidthRequest="140" HeightRequest="140" HorizontalOptions="Center" VerticalOptions="Center"/>
 
                     <!-- Moon -->
-                    <Ellipse Fill="#F4D03F"
-                             WidthRequest="100"
-                             HeightRequest="100"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center">
+                    <Ellipse Fill="#F4D03F" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center" VerticalOptions="Center">
                         <Ellipse.Shadow>
-                            <Shadow Brush="#F4D03F"
-                                    Opacity="0.5"
-                                    Radius="30"
-                                    Offset="0,0"/>
+                            <Shadow Brush="#F4D03F" Opacity="0.5" Radius="30" Offset="0,0"/>
                         </Ellipse.Shadow>
                     </Ellipse>
 
                     <!-- Craters -->
-                    <Ellipse Fill="#E6C740"
-                             WidthRequest="20"
-                             HeightRequest="20"
-                             Margin="30,35,0,0"
-                             HorizontalOptions="Start"
-                             VerticalOptions="Start"/>
-                    <Ellipse Fill="#E6C740"
-                             WidthRequest="15"
-                             HeightRequest="15"
-                             Margin="0,50,25,0"
-                             HorizontalOptions="End"
-                             VerticalOptions="Start"/>
-                    <Ellipse Fill="#E6C740"
-                             WidthRequest="12"
-                             HeightRequest="12"
-                             Margin="45,0,0,30"
-                             HorizontalOptions="Start"
-                             VerticalOptions="End"/>
+                    <Ellipse Fill="#E6C740" WidthRequest="20" HeightRequest="20" Margin="30,35,0,0" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <Ellipse Fill="#E6C740" WidthRequest="15" HeightRequest="15" Margin="0,50,25,0" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <Ellipse Fill="#E6C740" WidthRequest="12" HeightRequest="12" Margin="45,0,0,30" HorizontalOptions="Start" VerticalOptions="End"/>
                 </Grid>
             </Border>
 
             <!-- App Title -->
-            <Label Text="Sleep Journal"
-                   FontFamily="OpenSansSemibold"
-                   FontSize="42"
-                   TextColor="White"
-                   HorizontalTextAlignment="Center"
-                   Opacity="0"
-                   x:Name="TitleLabel">
+            <Label Text="Sleep Journal" FontFamily="OpenSansSemibold" FontSize="42" TextColor="White" HorizontalTextAlignment="Center" Opacity="0" x:Name="TitleLabel">
                 <Label.Shadow>
-                    <Shadow Brush="{StaticResource PrimaryDark}"
-                            Opacity="0.4"
-                            Radius="10"
-                            Offset="0,2"/>
+                    <Shadow Brush="{StaticResource PrimaryDark}" Opacity="0.4" Radius="10" Offset="0,2"/>
                 </Label.Shadow>
             </Label>
 
             <!-- Subtitle -->
-            <Label Text="Track your sleep, reflect on your day"
-                   FontFamily="OpenSansRegular"
-                   FontSize="16"
-                   TextColor="#B8C0CC"
-                   HorizontalTextAlignment="Center"
-                   Opacity="0"
-                   x:Name="SubtitleLabel"/>
+            <Label Text="Track your sleep, reflect on your day" FontFamily="OpenSansRegular" FontSize="16" TextColor="#B8C0CC" HorizontalTextAlignment="Center" Opacity="0" x:Name="SubtitleLabel"/>
         </VerticalStackLayout>
 
         <!-- Middle Section - Features -->
         <ScrollView Grid.Row="1">
-            <VerticalStackLayout Spacing="24"
-                                 Padding="40,20"
-                                 VerticalOptions="Center">
+            <VerticalStackLayout Spacing="24" Padding="40,20" VerticalOptions="Center">
 
                 <!-- Feature 1 -->
-                <Border BackgroundColor="#1E2A3A"
-                        Padding="24,20"
-                        StrokeThickness="1"
-                        Stroke="#2C3E50"
-                        Opacity="0"
-                        x:Name="Feature1">
+                <Border BackgroundColor="#1E2A3A" Padding="24,20" StrokeThickness="1" Stroke="#2C3E50" Opacity="0" x:Name="Feature1">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16"/>
                     </Border.StrokeShape>
-                    <Grid ColumnDefinitions="60,*"
-                            ColumnSpacing="16">
-                        <Border BackgroundColor="{StaticResource Primary}"
-                                WidthRequest="50"
-                                HeightRequest="50"
-                                StrokeThickness="0"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center">
+                    <Grid ColumnDefinitions="60,*" ColumnSpacing="16">
+                        <Border BackgroundColor="{StaticResource Primary}" WidthRequest="50" HeightRequest="50" StrokeThickness="0" HorizontalOptions="Center" VerticalOptions="Center">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="25"/>
                             </Border.StrokeShape>
-                            <Label Text="📝"
-                                   FontSize="28"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
+                            <Label Text="📝" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
-                        <VerticalStackLayout Grid.Column="1"
-                                Spacing="4"
-                                VerticalOptions="Center">
-                            <Label Text="Daily Journaling"
-                                   FontFamily="OpenSansSemibold"
-                                   FontSize="18"
-                                   TextColor="White"/>
-                            <Label Text="Record your thoughts and feelings before bed"
-                                   FontFamily="OpenSansRegular"
-                                   FontSize="13"
-                                   TextColor="#9AA5B5"
-                                   LineBreakMode="WordWrap"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="Daily Journaling" FontFamily="OpenSansSemibold" FontSize="18" TextColor="White"/>
+                            <Label Text="Record your thoughts and feelings before bed" FontFamily="OpenSansRegular" FontSize="13" TextColor="#9AA5B5" LineBreakMode="WordWrap"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
 
                 <!-- Feature 2 -->
-                <Border BackgroundColor="#1E2A3A"
-                        Padding="24,20"
-                        StrokeThickness="1"
-                        Stroke="#2C3E50"
-                        Opacity="0"
-                        x:Name="Feature2">
+                <Border BackgroundColor="#1E2A3A" Padding="24,20" StrokeThickness="1" Stroke="#2C3E50" Opacity="0" x:Name="Feature2">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16"/>
                     </Border.StrokeShape>
-                    <Grid ColumnDefinitions="60,*"
-                            ColumnSpacing="16">
-                        <Border BackgroundColor="{StaticResource Secondary}"
-                                WidthRequest="50"
-                                HeightRequest="50"
-                                StrokeThickness="0"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center">
+                    <Grid ColumnDefinitions="60,*" ColumnSpacing="16">
+                        <Border BackgroundColor="{StaticResource Secondary}" WidthRequest="50" HeightRequest="50" StrokeThickness="0" HorizontalOptions="Center" VerticalOptions="Center">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="25"/>
                             </Border.StrokeShape>
-                            <Label Text="📊"
-                                   FontSize="28"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
+                            <Label Text="📊" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
-                        <VerticalStackLayout Grid.Column="1"
-                                Spacing="4"
-                                VerticalOptions="Center">
-                            <Label Text="Track Patterns"
-                                   FontFamily="OpenSansSemibold"
-                                   FontSize="18"
-                                   TextColor="White"/>
-                            <Label Text="Visualize your mood and sleep quality trends"
-                                   FontFamily="OpenSansRegular"
-                                   FontSize="13"
-                                   TextColor="#9AA5B5"
-                                   LineBreakMode="WordWrap"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="Track Patterns" FontFamily="OpenSansSemibold" FontSize="18" TextColor="White"/>
+                            <Label Text="Visualize your mood and sleep quality trends" FontFamily="OpenSansRegular" FontSize="13" TextColor="#9AA5B5" LineBreakMode="WordWrap"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
 
                 <!-- Feature 3 -->
-                <Border BackgroundColor="#1E2A3A"
-                        Padding="24,20"
-                        StrokeThickness="1"
-                        Stroke="#2C3E50"
-                        Opacity="0"
-                        x:Name="Feature3">
+                <Border BackgroundColor="#1E2A3A" Padding="24,20" StrokeThickness="1" Stroke="#2C3E50" Opacity="0" x:Name="Feature3">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16"/>
                     </Border.StrokeShape>
-                    <Grid ColumnDefinitions="60,*"
-                            ColumnSpacing="16">
-                        <Border BackgroundColor="{StaticResource Accent}"
-                                WidthRequest="50"
-                                HeightRequest="50"
-                                StrokeThickness="0"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center">
+                    <Grid ColumnDefinitions="60,*" ColumnSpacing="16">
+                        <Border BackgroundColor="{StaticResource Accent}" WidthRequest="50" HeightRequest="50" StrokeThickness="0" HorizontalOptions="Center" VerticalOptions="Center">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="25"/>
                             </Border.StrokeShape>
-                            <Label Text="🔒"
-                                   FontSize="28"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
+                            <Label Text="🔒" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Border>
-                        <VerticalStackLayout Grid.Column="1"
-                                Spacing="4"
-                                VerticalOptions="Center">
-                            <Label Text="Private and Secure"
-                                   FontFamily="OpenSansSemibold"
-                                   FontSize="18"
-                                   TextColor="White"/>
-                            <Label Text="Your thoughts stay safe with local storage"
-                                   FontFamily="OpenSansRegular"
-                                   FontSize="13"
-                                   TextColor="#9AA5B5"
-                                   LineBreakMode="WordWrap"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                            <Label Text="Private and Secure" FontFamily="OpenSansSemibold" FontSize="18" TextColor="White"/>
+                            <Label Text="Your thoughts stay safe with local storage" FontFamily="OpenSansRegular" FontSize="13" TextColor="#9AA5B5" LineBreakMode="WordWrap"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
@@ -264,35 +126,15 @@
         </ScrollView>
 
         <!-- Bottom Section - CTA Button -->
-        <VerticalStackLayout Grid.Row="2"
-                             Spacing="16"
-                             Padding="40,20,40,50">
+        <VerticalStackLayout Grid.Row="2" Spacing="16" Padding="40,20,40,50">
 
-            <Button Text="Start Your Journey"
-                    FontFamily="OpenSansSemibold"
-                    FontSize="18"
-                    BackgroundColor="{StaticResource Primary}"
-                    TextColor="White"
-                    HeightRequest="58"
-                    CornerRadius="29"
-                    Opacity="0"
-                    x:Name="GetStartedButton"
-                    Command="{Binding GetStartedCommand}">
+            <Button Text="Start Your Journey" FontFamily="OpenSansSemibold" FontSize="18" BackgroundColor="{StaticResource Primary}" TextColor="White" HeightRequest="58" CornerRadius="29" Opacity="0" x:Name="GetStartedButton" Command="{Binding GetStartedCommand}">
                 <Button.Shadow>
-                    <Shadow Brush="{StaticResource Primary}"
-                            Opacity="0.5"
-                            Radius="20"
-                            Offset="0,4"/>
+                    <Shadow Brush="{StaticResource Primary}" Opacity="0.5" Radius="20" Offset="0,4"/>
                 </Button.Shadow>
             </Button>
 
-            <Label Text="Swipe up to explore features"
-                   FontFamily="OpenSansRegular"
-                   FontSize="12"
-                   TextColor="#7B8A9E"
-                   HorizontalTextAlignment="Center"
-                   Opacity="0"
-                   x:Name="HintLabel"/>
+            <Label Text="Swipe up to explore features" FontFamily="OpenSansRegular" FontSize="12" TextColor="#7B8A9E" HorizontalTextAlignment="Center" Opacity="0" x:Name="HintLabel"/>
         </VerticalStackLayout>
 
     </Grid>

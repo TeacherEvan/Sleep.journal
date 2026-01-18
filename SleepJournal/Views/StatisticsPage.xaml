@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:SleepJournal.ViewModels"
-             xmlns:converters="clr-namespace:SleepJournal.Converters"
-             xmlns:behaviors="clr-namespace:SleepJournal.Behaviors"
-             x:Class="SleepJournal.Views.StatisticsPage"
-             x:DataType="viewModels:StatisticsViewModel"
-             Title="Statistics">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:SleepJournal.ViewModels"
+    xmlns:behaviors="clr-namespace:SleepJournal.Behaviors" x:Class="SleepJournal.Views.StatisticsPage" x:DataType="viewModels:StatisticsViewModel" Title="Statistics">
 
     <ContentPage.Resources>
-        <converters:StringToBoolConverter x:Key="StringToBool"/>
-        <converters:InvertedBoolConverter x:Key="InvertedBool"/>
-        <converters:ProgressConverter x:Key="ProgressConverter"/>
-
         <!-- Responsive values based on device idiom -->
-        <OnIdiom x:Key="CardPadding"
-                x:TypeArguments="Thickness">
+        <OnIdiom x:Key="CardPadding" x:TypeArguments="Thickness">
             <OnIdiom.Phone>20</OnIdiom.Phone>
             <OnIdiom.Tablet>30</OnIdiom.Tablet>
             <OnIdiom.Desktop>40</OnIdiom.Desktop>
         </OnIdiom>
 
-        <OnIdiom x:Key="PageMargin"
-                x:TypeArguments="Thickness">
+        <OnIdiom x:Key="PageMargin" x:TypeArguments="Thickness">
             <OnIdiom.Phone>20</OnIdiom.Phone>
             <OnIdiom.Tablet>40,20</OnIdiom.Tablet>
             <OnIdiom.Desktop>80,30</OnIdiom.Desktop>
@@ -30,175 +20,89 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20"
-                Spacing="15">
+        <VerticalStackLayout Padding="20" Spacing="15">
 
             <!-- Error Message -->
-            <Label Text="{Binding ErrorMessage}"
-                   TextColor="Red"
-                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBool}}"
-                   Margin="0,0,0,10"/>
+            <Label Text="{Binding ErrorMessage}" TextColor="Red" IsVisible="{Binding HasError}" Margin="0,0,0,10"/>
 
             <!-- Loading Indicator -->
-            <ActivityIndicator IsRunning="{Binding IsLoading}"
-                               IsVisible="{Binding IsLoading}"
-                               HeightRequest="50"
-                               Color="{StaticResource Primary}"/>
+            <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HeightRequest="50" Color="{StaticResource Primary}"/>
 
             <!-- No Data Message -->
-            <Label Text="No journal entries yet. Start journaling to see your statistics!"
-                   IsVisible="{Binding HasData, Converter={StaticResource InvertedBool}}"
-                   FontSize="16"
-                   HorizontalTextAlignment="Center"
-                   VerticalOptions="Center"
-                   Margin="0,100,0,0"/>
+            <Label Text="No journal entries yet. Start journaling to see your statistics!" IsVisible="{Binding NoData}" FontSize="16" HorizontalTextAlignment="Center" VerticalOptions="Center" Margin="0,100,0,0"/>
 
             <!-- Statistics Content -->
-            <VerticalStackLayout IsVisible="{Binding HasData}"
-                    Spacing="15">
+            <VerticalStackLayout IsVisible="{Binding HasData}" Spacing="15">
 
                 <!-- Summary Card -->
-                <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
-                       CornerRadius="12"
-                       Padding="20"
-                       HasShadow="True">
+                <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" CornerRadius="12" Padding="20" HasShadow="True">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="📊 Summary"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="White"/>
+                        <Label Text="📊 Summary" FontSize="20" FontAttributes="Bold" TextColor="White"/>
 
-                        <Grid ColumnDefinitions="*,*"
-                                RowDefinitions="Auto,Auto"
-                                ColumnSpacing="10"
-                                RowSpacing="10">
-                            <VerticalStackLayout Grid.Row="0"
-                                    Grid.Column="0">
-                                <Label Text="Total Entries"
-                                        FontSize="12"
-                                        TextColor="White"
-                                        Opacity="0.8"/>
-                                <Label Text="{Binding TotalEntries}"
-                                        FontSize="24"
-                                        FontAttributes="Bold"
-                                        TextColor="White"/>
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                                <Label Text="Total Entries" FontSize="12" TextColor="White" Opacity="0.8"/>
+                                <Label Text="{Binding TotalEntries}" FontSize="24" FontAttributes="Bold" TextColor="White"/>
                             </VerticalStackLayout>
 
-                            <VerticalStackLayout Grid.Row="0"
-                                    Grid.Column="1">
-                                <Label Text="Last 7 Days"
-                                        FontSize="12"
-                                        TextColor="White"
-                                        Opacity="0.8"/>
-                                <Label Text="{Binding EntriesLast7Days}"
-                                        FontSize="24"
-                                        FontAttributes="Bold"
-                                        TextColor="White"/>
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                                <Label Text="Last 7 Days" FontSize="12" TextColor="White" Opacity="0.8"/>
+                                <Label Text="{Binding EntriesLast7Days}" FontSize="24" FontAttributes="Bold" TextColor="White"/>
                             </VerticalStackLayout>
 
-                            <VerticalStackLayout Grid.Row="1"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="2">
-                                <Label Text="Last 30 Days"
-                                        FontSize="12"
-                                        TextColor="White"
-                                        Opacity="0.8"/>
-                                <Label Text="{Binding EntriesLast30Days}"
-                                        FontSize="24"
-                                        FontAttributes="Bold"
-                                        TextColor="White"/>
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                <Label Text="Last 30 Days" FontSize="12" TextColor="White" Opacity="0.8"/>
+                                <Label Text="{Binding EntriesLast30Days}" FontSize="24" FontAttributes="Bold" TextColor="White"/>
                             </VerticalStackLayout>
                         </Grid>
                     </VerticalStackLayout>
                 </Frame>
 
                 <!-- Mood Averages Card -->
-                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
-                       CornerRadius="12"
-                       Padding="{StaticResource CardPadding}"
-                       HasShadow="True"
-                       BorderColor="{StaticResource Gray200}">
+                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" CornerRadius="12" Padding="{StaticResource CardPadding}" HasShadow="True" BorderColor="{StaticResource Gray200}">
                     <Frame.Behaviors>
                         <behaviors:FadeInBehavior Duration="500"/>
                     </Frame.Behaviors>
                     <VerticalStackLayout Spacing="15">
-                        <Label Text="😊 Average Scores"
-                               FontSize="18"
-                               FontAttributes="Bold"/>
+                        <Label Text="😊 Average Scores" FontSize="18" FontAttributes="Bold"/>
 
                         <!-- Mood -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Mood"
-                                    FontSize="14"
-                                    TextColor="{StaticResource Gray600}"/>
+                            <Label Text="Mood" FontSize="14" TextColor="{StaticResource Gray600}"/>
                             <Grid ColumnDefinitions="*,Auto">
-                                <ProgressBar Grid.Column="0"
-                                             Progress="{Binding AverageMood, Converter={StaticResource ProgressConverter}}"
-                                             ProgressColor="#4CAF50"
-                                             VerticalOptions="Center"/>
-                                <Label Grid.Column="1"
-                                       Text="{Binding AverageMood, StringFormat='{0:F1}/10'}"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       Margin="10,0,0,0"/>
+                                <ProgressBar Grid.Column="0" Progress="{Binding AverageMoodProgress}" ProgressColor="#4CAF50" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{Binding AverageMood, StringFormat='{0:F1}/10'}" FontSize="16" FontAttributes="Bold" Margin="10,0,0,0"/>
                             </Grid>
                         </VerticalStackLayout>
 
                         <!-- Social Anxiety -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Social Anxiety"
-                                    FontSize="14"
-                                    TextColor="{StaticResource Gray600}"/>
+                            <Label Text="Social Anxiety" FontSize="14" TextColor="{StaticResource Gray600}"/>
                             <Grid ColumnDefinitions="*,Auto">
-                                <ProgressBar Grid.Column="0"
-                                             Progress="{Binding AverageSocialAnxiety, Converter={StaticResource ProgressConverter}}"
-                                             ProgressColor="#FF9800"
-                                             VerticalOptions="Center"/>
-                                <Label Grid.Column="1"
-                                       Text="{Binding AverageSocialAnxiety, StringFormat='{0:F1}/10'}"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       Margin="10,0,0,0"/>
+                                <ProgressBar Grid.Column="0" Progress="{Binding AverageSocialAnxietyProgress}" ProgressColor="#FF9800" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{Binding AverageSocialAnxiety, StringFormat='{0:F1}/10'}" FontSize="16" FontAttributes="Bold" Margin="10,0,0,0"/>
                             </Grid>
                         </VerticalStackLayout>
 
                         <!-- Regretability -->
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Regretability"
-                                    FontSize="14"
-                                    TextColor="{StaticResource Gray600}"/>
+                            <Label Text="Regretability" FontSize="14" TextColor="{StaticResource Gray600}"/>
                             <Grid ColumnDefinitions="*,Auto">
-                                <ProgressBar Grid.Column="0"
-                                             Progress="{Binding AverageRegretability, Converter={StaticResource ProgressConverter}}"
-                                             ProgressColor="#F44336"
-                                             VerticalOptions="Center"/>
-                                <Label Grid.Column="1"
-                                       Text="{Binding AverageRegretability, StringFormat='{0:F1}/10'}"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       Margin="10,0,0,0"/>
+                                <ProgressBar Grid.Column="0" Progress="{Binding AverageRegretabilityProgress}" ProgressColor="#F44336" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{Binding AverageRegretability, StringFormat='{0:F1}/10'}" FontSize="16" FontAttributes="Bold" Margin="10,0,0,0"/>
                             </Grid>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Frame>
 
                 <!-- Most Common Mood Card -->
-                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
-                       CornerRadius="12"
-                       Padding="{StaticResource CardPadding}"
-                       HasShadow="True"
-                       BorderColor="{StaticResource Gray200}">
+                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}" CornerRadius="12" Padding="{StaticResource CardPadding}" HasShadow="True" BorderColor="{StaticResource Gray200}">
                     <Frame.Behaviors>
                         <behaviors:FadeInBehavior Duration="600"/>
                     </Frame.Behaviors>
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="🎯 Most Common Mood"
-                               FontSize="18"
-                               FontAttributes="Bold"/>
-                        <Label Text="{Binding MostCommonMood}"
-                               FontSize="20"
-                               TextColor="{StaticResource Primary}"
-                               FontAttributes="Bold"/>
+                        <Label Text="🎯 Most Common Mood" FontSize="18" FontAttributes="Bold"/>
+                        <Label Text="{Binding MostCommonMood}" FontSize="20" TextColor="{StaticResource Primary}" FontAttributes="Bold"/>
                     </VerticalStackLayout>
                 </Frame>
 

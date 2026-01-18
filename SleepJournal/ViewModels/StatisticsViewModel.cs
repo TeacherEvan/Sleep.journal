@@ -25,12 +25,15 @@ public partial class StatisticsViewModel : ObservableObject
     private int totalEntries;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AverageMoodProgress))]
     private double averageMood;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AverageSocialAnxietyProgress))]
     private double averageSocialAnxiety;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AverageRegretabilityProgress))]
     private double averageRegretability;
 
     [ObservableProperty]
@@ -43,13 +46,25 @@ public partial class StatisticsViewModel : ObservableObject
     private string mostCommonMood = "N/A";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NoData))]
     private bool isLoading;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasError))]
     private string errorMessage = "";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(NoData))]
     private bool hasData;
+
+    // Computed properties for progress bars (0-1 scale)
+    public double AverageMoodProgress => AverageMood / 10.0;
+    public double AverageSocialAnxietyProgress => AverageSocialAnxiety / 10.0;
+    public double AverageRegretabilityProgress => AverageRegretability / 10.0;
+
+    // UI helper properties
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
+    public bool NoData => !HasData && !IsLoading;
 
     /// <summary>
     /// Loads statistics data when the page appears.

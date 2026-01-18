@@ -4,11 +4,20 @@ namespace SleepJournal.Views;
 
 public partial class WelcomePage : ContentPage
 {
+    private readonly WelcomePageViewModel _viewModel;
+
     public WelcomePage(WelcomePageViewModel viewModel)
     {
         InitializeComponent();
+        _viewModel = viewModel;
         BindingContext = viewModel;
         Loaded += OnPageLoaded;
+    }
+
+    private async void OnPageAppearing(object? sender, EventArgs e)
+    {
+        // Request notification permissions when page appears
+        await _viewModel.PageAppearingCommand.ExecuteAsync(null);
     }
 
     private async void OnPageLoaded(object? sender, EventArgs e)

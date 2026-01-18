@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using SleepJournal.Services;
 
 namespace SleepJournal.ViewModels;
 
@@ -9,11 +10,51 @@ namespace SleepJournal.ViewModels;
 /// </summary>
 public partial class WelcomePageViewModel : ObservableObject
 {
+    private readonly INotificationService _notificationService;
     private readonly ILogger<WelcomePageViewModel> _logger;
 
-    public WelcomePageViewModel(ILogger<WelcomePageViewModel> logger)
+    [ObservableProperty]
+    private bool isRequestingPermissions;
+
+    public WelcomePageViewModel(
+        INotificationService notificationService,
+        ILogger<WelcomePageViewModel> logger)
     {
+        _notificationService = notificationService;
         _logger = logger;
+    }
+
+    /// <summary>
+    /// Requests notification permissions when the page appears.
+    /// </summary>
+    [RelayCommand]
+    private async Task PageAppearingAsync()
+    {
+        try
+        {
+            IsRequestingPermissions = true;
+            _logger.LogInformation("Requesting notification permissions on welcome screen");
+
+            // Request notification permissions proactively
+            var granted = await _notificationService.RequestPermissionsAsync();
+
+            if (granted)
+            {
+                _logger.LogInformation("Notification permissions granted");
+            }
+            else
+            {
+                _logger.LogWarning("Notification permissions denied by user");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to request notification permissions");
+        }
+        finally
+        {
+            IsRequestingPermissions = false;
+        }
     }
 
     /// <summary>
