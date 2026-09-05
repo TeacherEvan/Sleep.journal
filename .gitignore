@@ -219,3 +219,6 @@ sleepjournal.db
 sleepjournal.db-shm
 sleepjournal.db-wal
 test_*.db
+
+# V2 surgical-implementation audit scratch (session-local)
+docs/.scratch-audit/
