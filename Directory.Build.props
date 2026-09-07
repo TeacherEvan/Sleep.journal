@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Top-level MSBuild properties for SleepJournal solution.
+    Pins the MAUI workload version expected by SleepJournal.csproj,
+    which references Microsoft.Maui.Controls via Version="$(MauiVersion)".
+    Without this, restore fails with NU1015.
+
+    See docs/.scratch-audit/PLAN.md OBJ-003 for context.
+  -->
+  <PropertyGroup>
+    <MauiVersion>9.0.120</MauiVersion>
+  </PropertyGroup>
+</Project>
