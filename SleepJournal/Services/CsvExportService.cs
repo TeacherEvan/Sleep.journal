@@ -78,6 +78,33 @@ public class CsvExportService : IExportService
     }
 
     /// <summary>
+    /// Convenience overload: writes the CSV to <paramref name="filePath"/>.
+    /// Creates the parent directory if missing; overwrites any existing file.
+    /// </summary>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="filePath"/> is null or empty.
+    /// </exception>
+    public async Task ExportToFileAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(filePath);
+
+        var directory = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        // FileMode.Create = overwrite if exists. LeaveOpen=false so we dispose the stream.
+        await using var stream = new FileStream(
+            filePath,
+            FileMode.Create,
+            FileAccess.Write,
+            FileShare.None);
+
+        await ExportToCsvAsync(stream, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// RFC 4180 field escaping. Wraps in double-quotes and doubles any embedded
     /// double-quote when the field contains comma, quote, CR, or LF.
     /// </summary>

@@ -120,4 +120,80 @@ public class CsvExportServiceTests
 
         await act.Should().ThrowAsync<ArgumentException>();
     }
+
+    [Fact]
+    public async Task Export_FilePath_WritesContentMatchingStreamOverload()
+    {
+        var entries = new List<JournalEntry>
+        {
+            new()
+            {
+                Id = 11,
+                CreatedAt = new DateTime(2026, 2, 1, 22, 30, 0, DateTimeKind.Utc),
+                Mood = 7,
+                SocialAnxiety = 2,
+                Regretability = 5,
+                Text = "calm evening, slept well"
+            }
+        };
+
+        var svc = BuildService(entries);
+
+        // Stream overload baseline
+        string streamCsv;
+        using (var ms = new MemoryStream())
+        {
+            await svc.ExportToCsvAsync(ms);
+            ms.Position = 0;
+            using var sr = new StreamReader(ms);
+            streamCsv = await sr.ReadToEndAsync();
+        }
+
+        // File-path overload
+        var temp = Path.Combine(Path.GetTempPath(), $"sleepjournal-csv-{Guid.NewGuid():N}.csv");
+        try
+        {
+            await svc.ExportToFileAsync(temp);
+            var fileCsv = await File.ReadAllTextAsync(temp);
+
+            fileCsv.Should().Be(streamCsv);
+        }
+        finally
+        {
+            if (File.Exists(temp)) File.Delete(temp);
+        }
+    }
+
+    [Fact]
+    public async Task Export_FilePath_CreatatesMissingParentDirectory()
+    {
+        var svc = BuildService(new List<JournalEntry>
+        {
+            new() { Id = 1, CreatedAt = DateTime.UtcNow, Text = "ok" }
+        });
+
+        var nested = Path.Combine(Path.GetTempPath(), $"sleepjournal-csv-{Guid.NewGuid():N}", "sub", "out.csv");
+        try
+        {
+            await svc.ExportToFileAsync(nested);
+
+            File.Exists(nested).Should().BeTrue();
+            Directory.Exists(Path.GetDirectoryName(nested)).Should().BeTrue();
+        }
+        finally
+        {
+            var dir = Path.GetDirectoryName(nested);
+            if (dir != null && Directory.Exists(dir)) Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task Export_FilePath_NullOrEmpty_Throws(string? path)
+    {
+        var svc = BuildService(new List<JournalEntry>());
+        var act = async () => await svc.ExportToFileAsync(path!);
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
 }
