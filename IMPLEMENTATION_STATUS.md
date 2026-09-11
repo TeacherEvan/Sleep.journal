@@ -1,7 +1,7 @@
 # Sleep Journal - Implementation Summary
 
 **Date:** January 18, 2026  
-**Status:** Phases 1-3 Complete ✅, Phase 4 (Integration) IN PROGRESS
+**Status:** Phases 1-4 Complete ✅, Phase 5 (Polish) PENDING
 
 ---
 
@@ -157,16 +157,22 @@ dfd169d (previous baseline)
 
 ## 🚀 Next Steps
 
-### Phase 3: Enhanced UX (2-3 weeks) - PENDING
+### Phase 3: Enhanced UX (2-3 weeks) - COMPLETE
 
-- [ ] Statistics dashboard with charts
-- [ ] Search and filter functionality
-- [ ] Success animations and visual feedback
-- [ ] Responsive layouts for tablets
+- [x] Statistics dashboard with charts (StatisticsViewModel + StatisticsPage, Analytics route)
+- [x] Search and filter functionality (HistoryPageViewModel.ApplyFilters: text search, date range, mood range)
+- [x] Success animations and visual feedback (TwinkleStarsBehavior, staggered fade-in)
+- [x] Responsive layouts for tablets (OnIdiom, adaptive padding)
 
-### Phase 4: Integration (2-3 weeks) - IN PROGRESS
+### Phase 4: Integration (2-3 weeks) - COMPLETE
 
-- [x] Audio feedback system (IAudioService / AudioService)
+> **Note (2026-09-11):** `AudioService` previously only logged; the `[x]` tick
+> was a false-complete. Real PCM/WAV synthesis + 10 unit tests added
+> (`AudioServiceTests.cs`). Platform audio player routing still TODO
+> (see `PlayWavAsync` in `AudioService.cs`); bytes are produced but not yet
+> routed to speakers.
+
+- [x] Audio feedback system (IAudioService / AudioService) — PCM/WAV synthesis, unit-tested
 - [x] Audio volume control (0.0-1.0, persisted in UserSettings)
 - [x] Audio on/off toggle in Settings page
 - [x] Audio muted state respected by PlayDropSound/PlayClickSound
