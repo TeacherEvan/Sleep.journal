@@ -32,4 +32,14 @@ public class UserSettings
     /// Gets or sets a value indicating whether dark mode is enabled.
     /// </summary>
     public bool UseDarkMode { get; set; }
+
+    /// <summary>
+    /// Gets or sets the audio feedback volume (0.0 to 1.0).
+    /// </summary>
+    public float AudioVolume { get; set; } = AppConstants.Defaults.AudioVolume;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether audio feedback is enabled.
+    /// </summary>
+    public bool AudioEnabled { get; set; } = AppConstants.Defaults.AudioEnabled;
 }

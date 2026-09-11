@@ -14,6 +14,7 @@ public partial class SettingsPageViewModel : ObservableObject
     private readonly IDataService _dataService;
     private readonly IBiometricService _biometricService;
     private readonly INotificationService _notificationService;
+    private readonly IAudioService _audioService;
     private readonly ILogger<SettingsPageViewModel> _logger;
 
     [ObservableProperty]
@@ -35,6 +36,12 @@ public partial class SettingsPageViewModel : ObservableObject
     private bool biometricAvailable;
 
     [ObservableProperty]
+    private float audioVolume = AppConstants.Defaults.AudioVolume;
+
+    [ObservableProperty]
+    private bool audioEnabled;
+
+    [ObservableProperty]
     private bool isSaving;
 
     [ObservableProperty]
@@ -49,16 +56,19 @@ public partial class SettingsPageViewModel : ObservableObject
     /// <param name="dataService">Data service for database operations.</param>
     /// <param name="biometricService">Biometric authentication service.</param>
     /// <param name="notificationService">Notification service for scheduling reminders.</param>
+    /// <param name="audioService">Audio service for feedback volume and toggles.</param>
     /// <param name="logger">Logger instance for tracking operations.</param>
     public SettingsPageViewModel(
         IDataService dataService,
         IBiometricService biometricService,
         INotificationService notificationService,
+        IAudioService audioService,
         ILogger<SettingsPageViewModel> logger)
     {
         _dataService = dataService;
         _biometricService = biometricService;
         _notificationService = notificationService;
+        _audioService = audioService;
         _logger = logger;
     }
 
@@ -85,6 +95,11 @@ public partial class SettingsPageViewModel : ObservableObject
                 EnableReminders = settings.EnableReminders;
                 ReminderTime = settings.ReminderTime;
                 UseDarkMode = settings.UseDarkMode;
+                AudioVolume = settings.AudioVolume;
+                AudioEnabled = settings.AudioEnabled;
+
+                _audioService.SetVolume(AudioVolume);
+                _audioService.SetAudioEnabled(AudioEnabled);
 
                 _logger.LogInformation("Loaded user settings for user: {UserName}", UserName);
             }
@@ -144,8 +159,14 @@ public partial class SettingsPageViewModel : ObservableObject
                 UserName = trimmedUserName,
                 EnableReminders = EnableReminders,
                 ReminderTime = ReminderTime,
-                UseDarkMode = UseDarkMode
+                UseDarkMode = UseDarkMode,
+                AudioVolume = AudioVolume,
+                AudioEnabled = AudioEnabled
             };
+
+            // Apply audio settings immediately
+            _audioService.SetVolume(AudioVolume);
+            _audioService.SetAudioEnabled(AudioEnabled);
 
             await _dataService.SaveUserSettingsAsync(settings, cancellationToken);
 

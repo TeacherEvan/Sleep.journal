@@ -165,6 +165,58 @@
                 </Grid>
             </Border>
 
+            <!-- Audio Section -->
+            <Label Text="Audio"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   Margin="0,16,0,0"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
+
+            <Border Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                    StrokeThickness="1"
+                    Padding="12"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0"
+                                             Spacing="4">
+                            <Label Text="Audio Feedback"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>
+                            <Label Text="Play sounds for button interactions"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding AudioEnabled}"
+                                VerticalOptions="Center"
+                                OnColor="{StaticResource Primary}"/>
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="4"
+                                         IsVisible="{Binding AudioEnabled}">
+                        <Label Text="Volume"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                        <Slider Value="{Binding AudioVolume}"
+                                Minimum="0.0"
+                                Maximum="1.0"
+                                MinimumTrackColor="{StaticResource Primary}"
+                                MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray700}}"
+                                ThumbColor="{StaticResource Primary}"
+                                ValueChanged="OnAudioVolumeChanged"/>
+                        <Label Text="{Binding AudioVolume, StringFormat='Volume: {0:P0}'}"
+                               FontSize="12"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
             <!-- Save Button -->
             <Button Text="Save Settings"
                     Command="{Binding SaveSettingsCommand}"

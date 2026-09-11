@@ -10,6 +10,7 @@ public class AudioService : IAudioService
 {
     private readonly ILogger<AudioService> _logger;
     private float _volume = 0.7f; // Default volume at 70%
+    private bool _audioEnabled = true; // Default audio on
 
     public AudioService(ILogger<AudioService> logger)
     {
@@ -18,6 +19,12 @@ public class AudioService : IAudioService
 
     public async Task PlayDropSoundAsync(CancellationToken cancellationToken = default)
     {
+        if (!_audioEnabled)
+        {
+            _logger.LogDebug("Drop sound skipped: audio disabled");
+            return;
+        }
+
         try
         {
             // Note: MAUI AudioManager requires platform-specific setup
@@ -33,6 +40,12 @@ public class AudioService : IAudioService
 
     public async Task PlayClickSoundAsync(CancellationToken cancellationToken = default)
     {
+        if (!_audioEnabled)
+        {
+            _logger.LogDebug("Click sound skipped: audio disabled");
+            return;
+        }
+
         try
         {
             _logger.LogDebug("Click sound requested at volume {Volume}", _volume * 0.5f);
@@ -44,6 +57,8 @@ public class AudioService : IAudioService
         }
     }
 
+    public float GetVolume() => _volume;
+
     public void SetVolume(float volume)
     {
         if (volume < 0f || volume > 1f)
@@ -53,5 +68,13 @@ public class AudioService : IAudioService
 
         _volume = volume;
         _logger.LogInformation("Audio volume set to {Volume}", volume);
+    }
+
+    public bool IsAudioEnabled => _audioEnabled;
+
+    public void SetAudioEnabled(bool enabled)
+    {
+        _audioEnabled = enabled;
+        _logger.LogInformation("Audio feedback {Status}", enabled ? "enabled" : "disabled");
     }
 }

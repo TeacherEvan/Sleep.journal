@@ -82,6 +82,16 @@ public static class AppConstants
         /// Default reminder enabled setting.
         /// </summary>
         public const bool EnableReminders = false;
+
+        /// <summary>
+        /// Default audio feedback volume (0.0 to 1.0).
+        /// </summary>
+        public const float AudioVolume = 0.7f;
+
+        /// <summary>
+        /// Default audio feedback enabled setting.
+        /// </summary>
+        public const bool AudioEnabled = true;
     }
 
     /// <summary>
