@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:SleepJournal.ViewModels"
-    xmlns:behaviors="clr-namespace:SleepJournal.Behaviors" x:Class="SleepJournal.Views.StatisticsPage" x:DataType="viewModels:StatisticsViewModel" Title="Statistics">
+    xmlns:behaviors="clr-namespace:SleepJournal.Behaviors" x:Class="SleepJournal.Views.StatisticsPage" x:DataType="viewModels:StatisticsViewModel" Title="Statistics"
+    AutomationId="statisticsPage">
 
     <ContentPage.Resources>
         <!-- Responsive values based on device idiom -->

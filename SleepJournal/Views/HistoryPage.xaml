@@ -25,6 +25,7 @@
                    Placeholder="Search entries..."
                    Text="{Binding SearchText}"
                    SearchCommand="{Binding SearchCommand}"
+                   AutomationId="historySearchBar"
                    Margin="8,8,8,0"/>
 
         <!-- Filter Panel -->
@@ -39,6 +40,7 @@
                         FontAttributes="Bold"/>
                 <Button Text="Clear Filters"
                         Command="{Binding ClearFiltersCommand}"
+                        AutomationId="clearFiltersButton"
                         FontSize="12"
                         Padding="8,4"
                         HorizontalOptions="End"/>
@@ -48,7 +50,8 @@
         <!-- Entries List -->
         <RefreshView Grid.Row="3"
                      IsRefreshing="{Binding IsRefreshing}"
-                     Command="{Binding RefreshEntriesCommand}">
+                     Command="{Binding RefreshEntriesCommand}"
+                     AutomationId="historyRefreshView">
 
             <CollectionView ItemsSource="{Binding Entries}"
                             RemainingItemsThreshold="5"

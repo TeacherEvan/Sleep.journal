@@ -148,6 +148,7 @@
                                 <Slider Minimum="1"
                                         Maximum="10"
                                         Value="{Binding Mood}"
+                                        AutomationId="moodSlider"
                                         MinimumTrackColor="{StaticResource Primary}"
                                         MaximumTrackColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
                                         ThumbColor="{StaticResource Primary}"/>
@@ -272,6 +273,7 @@
 
                         <Button Text="{Binding SaveButtonText}"
                                 Command="{Binding SaveCommand}"
+                                AutomationId="saveEntryButton"
                                 BackgroundColor="Transparent"
                                 TextColor="{StaticResource White}"
                                 FontFamily="OpenSansSemibold"

@@ -48,6 +48,7 @@
                            TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
                     <Entry Text="{Binding UserName}"
                            Placeholder="Enter your name"
+                           AutomationId="userNameEntry"
                            FontSize="16"
                            IsEnabled="{Binding IsSaving, Converter={StaticResource InvertedBoolConverter}}"/>
                 </VerticalStackLayout>
@@ -77,6 +78,7 @@
                                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}"/>
                         <Switch Grid.Column="1"
                                 IsToggled="{Binding EnableReminders}"
+                                AutomationId="enableRemindersSwitch"
                                 OnColor="{StaticResource Primary}"/>
                     </Grid>
 
@@ -86,6 +88,7 @@
                                FontSize="14"
                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
                         <TimePicker Time="{Binding ReminderTime}"
+                            AutomationId="reminderTimePicker"
                                     FontSize="16"
                                     Format="h:mm tt"/>
                         <Label Text="You'll receive a notification to journal at this time each day"
@@ -203,6 +206,7 @@
                                FontSize="14"
                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
                         <Slider Value="{Binding AudioVolume}"
+                        AutomationId="audioVolumeSlider"
                                 Minimum="0.0"
                                 Maximum="1.0"
                                 MinimumTrackColor="{StaticResource Primary}"
@@ -226,7 +230,7 @@
                     FontSize="16"
                     FontAttributes="Bold"
                     BackgroundColor="{StaticResource Primary}"
-                    TextColor="White">
+                    TextColor="White" AutomationId="saveSettingsButton">
                 <Button.Shadow>
                     <Shadow Brush="{StaticResource Primary}"
                             Offset="0,4"

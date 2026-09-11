@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResxResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResxResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Sleep Journal</value>
+  </data>
+  <data name="Home_Tab" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="History_Tab" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Statistics_Tab" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="Settings_Tab" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Save_Button" xml:space="preserve">
+    <value>Save Entry</value>
+  </data>
+  <data name="Update_Button" xml:space="preserve">
+    <value>Update Entry</value>
+  </data>
+  <data name="Settings_Save_Button" xml:space="preserve">
+    <value>Save Settings</value>
+  </data>
+  <data name="Search_Placeholder" xml:space="preserve">
+    <value>Search entries...</value>
+  </data>
+  <data name="Clear_Filters" xml:space="preserve">
+    <value>Clear Filters</value>
+  </data>
+  <data name="Enable_Reminders" xml:space="preserve">
+    <value>Enable daily reminders</value>
+  </data>
+  <data name="Enable_Dark_Mode" xml:space="preserve">
+    <value>Dark mode</value>
+  </data>
+  <data name="Enable_Audio" xml:space="preserve">
+    <value>Audio feedback</value>
+  </data>
+  <data name="Audio_Volume" xml:space="preserve">
+    <value>Audio volume</value>
+  </data>
+  <data name="Enable_Biometric" xml:space="preserve">
+    <value>Biometric authentication</value>
+  </data>
+  <data name="User_Name_Label" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="Mood_Label" xml:space="preserve">
+    <value>Rate your overall mood</value>
+  </data>
+  <data name="Social_Comfort_Label" xml:space="preserve">
+    <value>How comfortable did you feel socially?</value>
+  </data>
+  <data name="Reflection_Label" xml:space="preserve">
+    <value>How do you feel about today's choices?</value>
+  </data>
+  <data name="Empty_History" xml:space="preserve">
+    <value>No entries yet</value>
+  </data>
+  <data name="Empty_History_Sub" xml:space="preserve">
+    <value>Start journaling to see your history here</value>
+  </data>
+  <data name="No_Data_Stats" xml:space="preserve">
+    <value>No journal entries yet. Start journaling to see your statistics!</value>
+  </data>
+  <data name="Reminder_Notification" xml:space="preserve">
+    <value>Time to write in your sleep journal!</value>
+  </data>
+</root>
