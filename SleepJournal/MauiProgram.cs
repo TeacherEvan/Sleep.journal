@@ -22,6 +22,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IDataService, SQLiteDataService>();
 		builder.Services.AddSingleton<IBiometricService, BiometricService>();
 		builder.Services.AddSingleton<IAudioService, AudioService>();
+		builder.Services.AddSingleton<IAudioPlayer, PlatformAudioPlayer>();
 		builder.Services.AddSingleton<INotificationService, NotificationService>();
 		builder.Services.AddSingleton<IExportService, CsvExportService>();
 

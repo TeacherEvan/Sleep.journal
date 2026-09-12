@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Logging;
 
 namespace SleepJournal.Services;
@@ -21,9 +22,12 @@ public class AudioService : IAudioService
     private float _volume = 0.7f; // Default volume at 70%
     private bool _audioEnabled = true; // Default audio on
 
-    public AudioService(ILogger<AudioService> logger)
+    private readonly IAudioPlayer _audioPlayer;
+
+    public AudioService(ILogger<AudioService> logger, IAudioPlayer? audioPlayer = null)
     {
         _logger = logger;
+        _audioPlayer = audioPlayer ?? new PlatformAudioPlayer();
     }
 
     public async Task PlayDropSoundAsync(CancellationToken cancellationToken = default)
@@ -38,7 +42,7 @@ public class AudioService : IAudioService
         {
             // Water drop: short descending tone.
             var wav = GenerateWav(frequencyHz: 320, durationMs: 90, volume: _volume);
-            await PlayWavAsync(wav, cancellationToken);
+            await PlayWavAsync(wav, _volume, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -58,7 +62,7 @@ public class AudioService : IAudioService
         {
             // Soft click: very short higher tone at half volume.
             var wav = GenerateWav(frequencyHz: 960, durationMs: 25, volume: _volume * 0.5f);
-            await PlayWavAsync(wav, cancellationToken);
+            await PlayWavAsync(wav, _volume * 0.5f, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -152,11 +156,11 @@ public class AudioService : IAudioService
     /// iOS: AVAudioPlayer; Windows: SoundPlayer; Mac: NSSound). Until a platform
     /// player is implemented the bytes are produced and logged, not silenced.
     /// </summary>
-    private async Task PlayWavAsync(byte[] wav, CancellationToken cancellationToken)
+    private async Task PlayWavAsync(byte[] wav, float volume, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         _logger.LogDebug("Generated {ByteCount}-byte WAV sample for playback", wav.Length);
-        await Task.CompletedTask;
+        await _audioPlayer.PlayAsync(wav, volume, cancellationToken).ConfigureAwait(false);
     }
 
     private static void WriteInt32(byte[] buf, int offset, int value)

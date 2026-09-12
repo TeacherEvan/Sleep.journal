@@ -10,10 +10,12 @@ namespace SleepJournal.Tests.Services;
 /// </summary>
 public class AudioServiceTests
 {
-    private static AudioService BuildService()
+    private static AudioService BuildService(IAudioPlayer? player = null)
     {
         var logger = new Mock<ILogger<AudioService>>();
-        return new AudioService(logger.Object);
+        return player is null
+            ? new AudioService(logger.Object)
+            : new AudioService(logger.Object, player);
     }
 
     [Fact]
@@ -123,6 +125,81 @@ public class AudioServiceTests
         svc.IsAudioEnabled.Should().BeFalse();
         svc.SetAudioEnabled(true);
         svc.IsAudioEnabled.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task PlayDropSoundAsync_InvokesPlayerWithGeneratedBytes()
+    {
+        var player = new Mock<IAudioPlayer>();
+        var svc = BuildService(player.Object);
+
+        await svc.PlayDropSoundAsync();
+
+        player.Verify(
+            p => p.PlayAsync(
+                It.Is<byte[]>(b => b.Length == 44 + (int)(44100 * 0.09) * 2),
+                It.Is<float>(v => Math.Abs(v - 0.7f) < 0.001f),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task PlayClickSoundAsync_ForwardsHalvedVolumeToPlayer()
+    {
+        var player = new Mock<IAudioPlayer>();
+        var svc = BuildService(player.Object);
+
+        await svc.PlayClickSoundAsync();
+
+        // Click is a 25ms tone at half volume -> 0.35.
+        player.Verify(
+            p => p.PlayAsync(
+                It.Is<byte[]>(b => b.Length == 44 + (int)(44100 * 0.025) * 2),
+                It.Is<float>(v => Math.Abs(v - 0.35f) < 0.001f),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task PlayDropSoundAsync_MutedSkipsPlayer()
+    {
+        var player = new Mock<IAudioPlayer>();
+        var svc = BuildService(player.Object);
+        svc.SetAudioEnabled(false);
+
+        await svc.PlayDropSoundAsync();
+        await svc.PlayClickSoundAsync();
+
+        player.Verify(p => p.PlayAsync(It.IsAny<byte[]>(), It.IsAny<float>(), It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task PlayDropSoundAsync_PlayerThrows_DoesNotPropagate()
+    {
+        var player = new Mock<IAudioPlayer>();
+        player.Setup(p => p.PlayAsync(It.IsAny<byte[]>(), It.IsAny<float>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("boom"));
+        var svc = BuildService(player.Object);
+
+        // Must not throw out of the service boundary.
+        var act = () => svc.PlayDropSoundAsync();
+        await act.Should().NotThrowAsync();
+
+        player.Verify(p => p.PlayAsync(It.IsAny<byte[]>(), It.IsAny<float>(), It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task PlayClickSoundAsync_PlayerThrows_DoesNotPropagate()
+    {
+        var player = new Mock<IAudioPlayer>();
+        player.Setup(p => p.PlayAsync(It.IsAny<byte[]>(), It.IsAny<float>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("boom"));
+        var svc = BuildService(player.Object);
+
+        var act = () => svc.PlayClickSoundAsync();
+        await act.Should().NotThrowAsync();
     }
 
     private static int MaxAbsSample(byte[] wav)

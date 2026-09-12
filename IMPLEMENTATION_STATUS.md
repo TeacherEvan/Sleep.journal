@@ -166,13 +166,14 @@ dfd169d (previous baseline)
 
 ### Phase 4: Integration (2-3 weeks) - COMPLETE
 
-> **Note (2026-09-11):** `AudioService` previously only logged; the `[x]` tick
-> was a false-complete. Real PCM/WAV synthesis + 10 unit tests added
-> (`AudioServiceTests.cs`). Platform audio player routing still TODO
-> (see `PlayWavAsync` in `AudioService.cs`); bytes are produced but not yet
-> routed to speakers.
+> **Note (2026-09-12):** Platform audio player routing is now COMPLETE. `PlayWavAsync`
+> delegates to an injected `IAudioPlayer` (default `PlatformAudioPlayer` with
+> per-platform `#if` bodies); bytes are routed to the speaker, not just logged.
+> Verified by 5 new tests: bytes forwarded, volume forwarded, muted -> zero
+> player calls, player throws -> no propagation (break-it check confirmed).
 
 - [x] Audio feedback system (IAudioService / AudioService) — PCM/WAV synthesis, unit-tested
+- [x] Platform audio player routing (IAudioService / AudioService / IAudioPlayer / PlatformAudioPlayer) — WAV bytes now routed to a real per-platform player via DI; bytes-forwarded + muted-no-call + player-throws-no-propagation verified by 5 new tests
 - [x] Audio volume control (0.0-1.0, persisted in UserSettings)
 - [x] Audio on/off toggle in Settings page
 - [x] Audio muted state respected by PlayDropSound/PlayClickSound
