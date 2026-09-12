@@ -151,10 +151,10 @@ public class AudioService : IAudioService
     }
 
     /// <summary>
-    /// Routes generated WAV bytes to the platform audio player.
-    /// TODO: wire per-platform playback (Android: AudioTrack / Xamarin.Essentials;
-    /// iOS: AVAudioPlayer; Windows: SoundPlayer; Mac: NSSound). Until a platform
-    /// player is implemented the bytes are produced and logged, not silenced.
+    /// Routes generated WAV bytes to the injected <see cref="IAudioPlayer"/>.
+    /// The default <see cref="PlatformAudioPlayer"/> compiles as a logging stub
+    /// under plain net9.0 and switches to a real backend per platform
+    /// (Android: AudioTrack; iOS/MacCatalyst: AVAudioPlayer; Windows: MediaPlayer).
     /// </summary>
     private async Task PlayWavAsync(byte[] wav, float volume, CancellationToken cancellationToken)
     {
